@@ -8,7 +8,7 @@ body {
   
   .container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
   }
   
   /* Sidebar */
@@ -61,29 +61,59 @@ body {
     display: block;
   }
   
-  /* Feed and Content Styles */
-  .feed, .instruction, .update {
-    background-color: #40444b;
-    padding: 15px;
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .sidebar {
+      width: 100%;
+      text-align: center;
+    }
+  
+    .main-content {
+      padding: 10px;
+    }
+  }
+  
+  /* Server Status Section */
+  .status-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .status-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .status-light {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: red;
+  }
+  
+  .status-light.green {
+    background-color: green;
+  }
+  
+  .toggle-status {
+    padding: 5px 10px;
+    border: none;
     border-radius: 5px;
-    margin-bottom: 15px;
+    cursor: pointer;
+    background-color: #7289da;
+    color: white;
   }
   
-  h2 {
-    margin-top: 0;
+  .toggle-status:hover {
+    background-color: #677bc4;
   }
-  
-  h3 {
-    margin-bottom: 10px;
-  }
-  
-  p {
-    margin: 5px 0;
-  }
-  
-  code {
-    background-color: #2f3136;
-    padding: 2px 5px;
-    border-radius: 3px;
-    font-family: monospace;
+
+  .promo-image{
+    max-width: 100%; height: auto; max-height: 400px;
   }

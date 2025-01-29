@@ -14,3 +14,15 @@ tabs.forEach(tab => {
     document.getElementById(tabId).classList.add('active');
   });
 });
+
+// Server Status Toggle Logic
+const toggleButtons = document.querySelectorAll('.toggle-status');
+
+toggleButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const status = button.getAttribute('data-status');
+    const light = document.querySelector(`.status-light[data-status="${status}"]`);
+    light.classList.toggle('red');
+    light.classList.toggle('green');
+  });
+});

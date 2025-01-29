@@ -7,17 +7,18 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="container">
+  <div class="container">
     <!-- Sidebar -->
     <div class="sidebar">
-        <div class="logo" style="display: flex; justify-content: space-between; align-items: center;">
-            <span>E & L</span>
-            <img src="sims.png" height=25px width=25px alt="Minecraft Logo" class="logo-image">
-        </div>
-        <ul class="tabs">
-            <li class="tab active" data-tab="general">General</li>
-            <li class="tab" data-tab="instructions">Instructions</li>
-            <li class="tab" data-tab="changelog">Changelog</li>
+      <div class="logo" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>E & L</span>
+        <img src="sims.png" height=25px width=25px alt="Minecraft Logo" class="logo-image">
+      </div>
+      <ul class="tabs">
+        <li class="tab active" data-tab="general">General</li>
+        <li class="tab" data-tab="instructions">Instructions</li>
+        <li class="tab" data-tab="changelog">Changelog</li>
+        <li class="tab" data-tab="server-status">Server Status</li>
       </ul>
     </div>
 
@@ -27,8 +28,8 @@
       <div id="general" class="tab-content active">
         <h2>General</h2>
         <div class="server-header">
-            <h1>Ethan & Lilly's Guild</h1>
-            <img src="landingimage.png" alt="Server Promotional Image" class="promo-image" style="max-width: 100%; height: auto; max-height: 400px;">
+          <h1>Ethan & Lilly's Guild</h1>
+          <img src="landingimage.png" alt="Server Promotional Image" class="promo-image">
         </div>
         <div class="feed">
           <div class="announcement">
@@ -36,8 +37,8 @@
             <p>This is where announcements and updates will be posted. Stay tuned for exciting news!</p>
           </div>
           <div class="announcement">
-            <h3>Upcoming Event: Joe Mama</h3>
-            <p>big chungus</p>
+            <h3>Upcoming Event: FTB Infinity Evolved 1.7.10 Server</h3>
+            <p>A fan favorite with the craziest and coolest mods returns! This server will be heavily supported as a passion project with many events and factions. (February 2025)</p>
           </div>
         </div>
       </div>
@@ -65,6 +66,21 @@
         <div class="update">
           <h3>Version 1.1.5</h3>
           <p>- Improved server performance.<br>- Added new mobs.</p>
+        </div>
+      </div>
+
+      <!-- Server Status Tab -->
+      <div id="server-status" class="tab-content">
+        <h2>Server Status</h2>
+        <div class="status-container">
+          <div class="status-item">
+            <h3>Dark RPG - 40.238.142.30</h3>
+            <div class="status-light red" data-status="ftb-infinity"></div>
+          </div>
+          <div class="status-item">
+            <h3>Cozy RPG - 40.238.142.30:25566 </h3> <a href="CozyRPGFinalized.zip" download>Download Pack (CurseForge)</a>
+            <div class="status-light green" data-status="vanilla"></div>
+          </div>
         </div>
       </div>
     </div>
