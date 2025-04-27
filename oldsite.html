@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E & L Community Hub</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo" style="display: flex; justify-content: space-between; align-items: center;">
+        <span>E & L</span>
+        <img src="sims.png" height=25px width=25px alt="Minecraft Logo" class="logo-image">
+      </div>
+      <ul class="tabs">
+        <li class="tab active" data-tab="general">General</li>
+        <li class="tab" data-tab="instructions">Instructions</li>
+        <li class="tab" data-tab="changelog">Changelog</li>
+        <li class="tab" data-tab="server-status">Server Status</li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- General Tab -->
+      <div id="general" class="tab-content active">
+        <h2>General</h2>
+        <div class="server-header">
+         <!--<h1>Ethan & Lilly's Guild</h1>--> 
+          <img src="landingimage.png" alt="Server Promotional Image" class="promo-image" style="max-width: 100%; height: auto; max-height: 250px;">
+        </div>
+        <div class="feed">
+          <div class="announcement">
+            <h3>Welcome to the Community!</h3>
+            <p>This is where announcements and updates will be posted. Stay tuned for exciting news!</p>
+          </div>
+          <br>
+          <div class="announcement">
+            <h3><b style="color: greenyellow;">FTB Infinity Evolved 1.7.10</b> - Open Beta is Live Now! Check <code>Instructions</code> for download!</h3>
+            <img src="kuromi.jpg" alt="Server Promotional Image" class="promo-image" style="max-width: 100%; height: auto; max-height: 100px;">
+            <p>A fan favorite with the craziest and coolest mods returns! This server will be heavily supported as a passion project with many events and factions. (February 2025)</p>
+            <h3>Choose Your Journey</h3>
+            <p>Will you be a dimension-hopping nomad with Mystcraft and OreSpawn? Settle down and build a factory with our tech mods? Master the arcane with Thaumcraft and Witchery? Embrace your draconic roots and evolve past humanity with Draconic Evolution? Cause chaos with the Morph mod and nukes? The choice is yours! We also added some extra shaders and resource packs to choose from 😎</p>
+            <br>Featured mods: <br>
+            <ul>
+                <li>Thaumcraft - The best magic mod in Minecraft history</li>
+                <li>Mystcraft - An incredible dimension mod to keep every world feeling like a new adventure</li>
+                <li>OreSpawn - A crazy mod that adds an insane amount of content with huge challenges</li>
+                <li>Tinker's Construct - The original version!</li>
+                <li>Morph - Transform into your slain enemies. This gets really wild with modded creatures</li>
+                <li>Create teams and factions to protect your bases and communities</li>
+                <li>Power Mods - Thermal Expansion, Industrial Craft, Minefactory Reloaded, and more</li>
+                <li>Witchery - If being a thaumaturge isn't for you, follow the path of the witch</li>
+                <li>Draconic Evolution - Harness the power of the draconic realm with powerful tools and weapons</li>
+                <li><b>And many more!</b></li>
+            </ul>
+        </div>
+          <br>
+          <div class="announcement">
+            <h3>Launched DarkRPG and CozyRPG Servers!</h3>
+            <p>Our first test run using Oracle Cloud VM to simultaneously host two different servers with two very different experiences! (January 2025)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions Tab -->
+      <div id="instructions" class="tab-content">
+        <h2>Instructions</h2>
+        <div class="instruction">
+            <h3>How to Install FTB Infinity Evolved (With Extra Mods)</h3>
+            <p>1. Download CurseForge desktop application.<br>2. Download FTB Infinity Evolved<br>3. Check your settings to allocate enough memory (RAM), around 4-10 GB is good. Follow these final steps below</p>
+            <div class="instruction-images">
+              <figure>
+          <img src="ins1.jpg" alt="CurseForge Settings" style="max-width: 300px; transition: transform 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='scale(1.5)'" onmouseout="this.style.transform='scale(1)'">
+          <figcaption>1. FTB Infinity Evolved Installation</figcaption>
+              </figure>
+              <figure>
+          <img src="ins2.jpg" alt="Minecraft Settings" style="max-width: 300px; transition: transform 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='scale(1.5)'" onmouseout="this.style.transform='scale(1)'">
+          <figcaption>2. Right click to open Mods folder.</figcaption>
+              </figure>
+              <figure>
+          <img src="ins3.jpg" alt="Memory Settings" style="max-width: 300px; transition: transform 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='scale(1.5)'" onmouseout="this.style.transform='scale(1)'">
+          <figcaption><a href="Extra Mods - Unzip Me.zip" download>Click here to download the extra mods</a> and after unzipping the folder, drag and drop the individual mods (jar files) into your modpack's mod folder, and you're good to go!<br>IP is <code>140.238.142.30</code><br><br>If you want shaders I can post additional instructions but they are much more limited in this version due to conflictions with the Morph mod.</figcaption>
+              </figure>
+            </div>
+          </div>
+        <div class="instruction">
+          <h3>How to Join a Minecraft Server</h3>
+          <p>1. Open Minecraft and go to Multiplayer.<br>2. Add a new server with the IP: <code>mc.example.com</code>.<br>3. Click "Join Server" and start playing!</p>
+        </div>
+        <div class="instruction">
+          <h3>Basic Commands</h3>
+          <p><code>/home</code> - Teleport to your home.<br><code>/sethome [name of home]</code> - Set a home.<br><code>/back</code> - Return to previous tp or death point.</p>
+        </div>
+        <div class="instruction">
+            <h3>FTB Infinity Evolved 1.7.10 Starter Guide</h3>
+            <p>You can transform into the things that you kill with the bracket keys [ ] and scroll wheel!<br>Right click OreSpawn ants and see what happens!<br>Mod guide can be found here https://www.orespawn.com/utopia/</p>
+          </div>
+      </div>
+
+      <!-- Changelog Tab -->
+      <div id="changelog" class="tab-content">
+        <h2>Changelog</h2>
+        <div class="update">
+          <h3>FTB Infinity Evolved</h3>
+          <p>- Added Mowzies Mod for more mobs and Llibrary as dependency.<br>- Removed due to server crash, we want stability!</p>
+        </div>
+        <div class="update">
+          <h3>FTB Infinity Evolved</h3>
+          <p>- Downgraded Optifine to fix kicking issue with Morph mod.<br>- If error persists consider removing Optifine (it's just for shaders and extra performance stuff, you can play without it)</p>
+        </div>
+        <div class="update">
+          <h3>CozyRPG</h3>
+          <p>- Fixed some issues with Nether loading.<br>- Re-enabled performance mods</p>
+        </div>
+        <div class="update">
+          <h3>DarkRPG</h3>
+          <p>- Improved server performance.<br>- Added proximity voice chat and dynamic sounds.</p>
+        </div>
+      </div>
+
+      <!-- Server Status Tab -->
+      <div id="server-status" class="tab-content">
+        <h2>Server Status</h2>
+        <div class="status-container">
+          <div class="status-item">
+            <h3>FTB Infinity Evolved (BETA - Report Any Compatibility Issues) - 140.238.142.30</h3>
+            <div class="status-light" data-status="ftb-infinity"></div>
+          </div>
+          <div class="status-item">
+            <h3>Dark RPG (1.20.1 Fabric)</h3>
+            <div class="status-light" data-status="ftb-infinity"></div>
+          </div>
+          <div class="status-item">
+            <h3>Cozy RPG (1.20.1 Forge) - 140.238.142.30:25566 </h3> <a href="CozyRPGFinalized.zip" download>Download Pack (CurseForge)</a>
+            <div class="status-light green" data-status="vanilla"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

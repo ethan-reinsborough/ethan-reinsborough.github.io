@@ -1,148 +1,463 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E & L Community Hub</title>
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NB Driver's Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @keyframes glow-green {
+            0% { box-shadow: 0 0 5px #4ade80; }
+            50% { box-shadow: 0 0 20px #4ade80; }
+            100% { box-shadow: 0 0 5px #4ade80; }
+        }
+        @keyframes glow-red {
+            0% { box-shadow: 0 0 5px #f87171; }
+            50% { box-shadow: 0 0 20px #f87171; }
+            100% { box-shadow: 0 0 5px #f87171; }
+        }
+        .correct {
+            animation: glow-green 1.5s ease-in-out;
+            background-color: #dcfce7;
+        }
+        .incorrect {
+            animation: glow-red 1.5s ease-in-out;
+            background-color: #fee2e2;
+        }
+        .sparkle {
+            position: relative;
+        }
+        .sparkle::after {
+            content: "✨";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            animation: sparkle 2s ease-out;
+        }
+        @keyframes sparkle {
+            0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
+            100% { opacity: 0; transform: translateX(-50%) scale(0.5); }
+        }
+        .confetti-button:hover {
+            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+            background-size: 400% 400%;
+            animation: gradient 3s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <div class="logo" style="display: flex; justify-content: space-between; align-items: center;">
-        <span>E & L</span>
-        <img src="sims.png" height=25px width=25px alt="Minecraft Logo" class="logo-image">
-      </div>
-      <ul class="tabs">
-        <li class="tab active" data-tab="general">General</li>
-        <li class="tab" data-tab="instructions">Instructions</li>
-        <li class="tab" data-tab="changelog">Changelog</li>
-        <li class="tab" data-tab="server-status">Server Status</li>
-      </ul>
-    </div>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-md">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-600 mb-2">New Brunswick</h1>
+            <h2 class="text-2xl font-semibold text-purple-600">Driver's License Quiz</h2>
+            <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-400 mx-auto mt-2 rounded-full"></div>
+        </header>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <!-- General Tab -->
-      <div id="general" class="tab-content active">
-        <h2>General</h2>
-        <div class="server-header">
-         <!--<h1>Ethan & Lilly's Guild</h1>--> 
-          <img src="landingimage.png" alt="Server Promotional Image" class="promo-image" style="max-width: 100%; height: auto; max-height: 250px;">
-        </div>
-        <div class="feed">
-          <div class="announcement">
-            <h3>Welcome to the Community!</h3>
-            <p>This is where announcements and updates will be posted. Stay tuned for exciting news!</p>
-          </div>
-          <br>
-          <div class="announcement">
-            <h3><b style="color: greenyellow;">FTB Infinity Evolved 1.7.10</b> - Open Beta is Live Now! Check <code>Instructions</code> for download!</h3>
-            <img src="kuromi.jpg" alt="Server Promotional Image" class="promo-image" style="max-width: 100%; height: auto; max-height: 100px;">
-            <p>A fan favorite with the craziest and coolest mods returns! This server will be heavily supported as a passion project with many events and factions. (February 2025)</p>
-            <h3>Choose Your Journey</h3>
-            <p>Will you be a dimension-hopping nomad with Mystcraft and OreSpawn? Settle down and build a factory with our tech mods? Master the arcane with Thaumcraft and Witchery? Embrace your draconic roots and evolve past humanity with Draconic Evolution? Cause chaos with the Morph mod and nukes? The choice is yours! We also added some extra shaders and resource packs to choose from 😎</p>
-            <br>Featured mods: <br>
-            <ul>
-                <li>Thaumcraft - The best magic mod in Minecraft history</li>
-                <li>Mystcraft - An incredible dimension mod to keep every world feeling like a new adventure</li>
-                <li>OreSpawn - A crazy mod that adds an insane amount of content with huge challenges</li>
-                <li>Tinker's Construct - The original version!</li>
-                <li>Morph - Transform into your slain enemies. This gets really wild with modded creatures</li>
-                <li>Create teams and factions to protect your bases and communities</li>
-                <li>Power Mods - Thermal Expansion, Industrial Craft, Minefactory Reloaded, and more</li>
-                <li>Witchery - If being a thaumaturge isn't for you, follow the path of the witch</li>
-                <li>Draconic Evolution - Harness the power of the draconic realm with powerful tools and weapons</li>
-                <li><b>And many more!</b></li>
-            </ul>
-        </div>
-          <br>
-          <div class="announcement">
-            <h3>Launched DarkRPG and CozyRPG Servers!</h3>
-            <p>Our first test run using Oracle Cloud VM to simultaneously host two different servers with two very different experiences! (January 2025)</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Instructions Tab -->
-      <div id="instructions" class="tab-content">
-        <h2>Instructions</h2>
-        <div class="instruction">
-            <h3>How to Install FTB Infinity Evolved (With Extra Mods)</h3>
-            <p>1. Download CurseForge desktop application.<br>2. Download FTB Infinity Evolved<br>3. Check your settings to allocate enough memory (RAM), around 4-10 GB is good. Follow these final steps below</p>
-            <div class="instruction-images">
-              <figure>
-          <img src="ins1.jpg" alt="CurseForge Settings" style="max-width: 300px; transition: transform 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='scale(1.5)'" onmouseout="this.style.transform='scale(1)'">
-          <figcaption>1. FTB Infinity Evolved Installation</figcaption>
-              </figure>
-              <figure>
-          <img src="ins2.jpg" alt="Minecraft Settings" style="max-width: 300px; transition: transform 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='scale(1.5)'" onmouseout="this.style.transform='scale(1)'">
-          <figcaption>2. Right click to open Mods folder.</figcaption>
-              </figure>
-              <figure>
-          <img src="ins3.jpg" alt="Memory Settings" style="max-width: 300px; transition: transform 0.3s ease; cursor: pointer;" onmouseover="this.style.transform='scale(1.5)'" onmouseout="this.style.transform='scale(1)'">
-          <figcaption><a href="Extra Mods - Unzip Me.zip" download>Click here to download the extra mods</a> and after unzipping the folder, drag and drop the individual mods (jar files) into your modpack's mod folder, and you're good to go!<br>IP is <code>140.238.142.30</code><br><br>If you want shaders I can post additional instructions but they are much more limited in this version due to conflictions with the Morph mod.</figcaption>
-              </figure>
+        <div id="quiz-container">
+            <div id="intro-screen" class="text-center">
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+                    <h3 class="text-xl font-bold text-blue-700 mb-4">Test Your Knowledge!</h3>
+                    <p class="text-gray-600 mb-6">Take this 25-question quiz to prepare for your New Brunswick Class 7 Learner's Test.</p>
+                    <button id="start-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full transition-all transform hover:scale-105 shadow-md">
+                        Start Quiz
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="font-bold text-purple-700 mb-2">Did You Know?</h4>
+                    <p class="text-gray-600 text-sm">In NB, school zones typically have a 50 km/h speed limit, and there's zero tolerance for alcohol for drivers under 21.</p>
+                </div>
             </div>
-          </div>
-        <div class="instruction">
-          <h3>How to Join a Minecraft Server</h3>
-          <p>1. Open Minecraft and go to Multiplayer.<br>2. Add a new server with the IP: <code>mc.example.com</code>.<br>3. Click "Join Server" and start playing!</p>
-        </div>
-        <div class="instruction">
-          <h3>Basic Commands</h3>
-          <p><code>/home</code> - Teleport to your home.<br><code>/sethome [name of home]</code> - Set a home.<br><code>/back</code> - Return to previous tp or death point.</p>
-        </div>
-        <div class="instruction">
-            <h3>FTB Infinity Evolved 1.7.10 Starter Guide</h3>
-            <p>You can transform into the things that you kill with the bracket keys [ ] and scroll wheel!<br>Right click OreSpawn ants and see what happens!<br>Mod guide can be found here https://www.orespawn.com/utopia/</p>
-          </div>
-      </div>
 
-      <!-- Changelog Tab -->
-      <div id="changelog" class="tab-content">
-        <h2>Changelog</h2>
-        <div class="update">
-          <h3>FTB Infinity Evolved</h3>
-          <p>- Added Mowzies Mod for more mobs and Llibrary as dependency.<br>- Removed due to server crash, we want stability!</p>
-        </div>
-        <div class="update">
-          <h3>FTB Infinity Evolved</h3>
-          <p>- Downgraded Optifine to fix kicking issue with Morph mod.<br>- If error persists consider removing Optifine (it's just for shaders and extra performance stuff, you can play without it)</p>
-        </div>
-        <div class="update">
-          <h3>CozyRPG</h3>
-          <p>- Fixed some issues with Nether loading.<br>- Re-enabled performance mods</p>
-        </div>
-        <div class="update">
-          <h3>DarkRPG</h3>
-          <p>- Improved server performance.<br>- Added proximity voice chat and dynamic sounds.</p>
-        </div>
-      </div>
+            <div id="quiz-screen" class="hidden">
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span id="question-number" class="font-bold text-blue-500">Q1</span>
+                        <span id="score" class="font-bold text-purple-500">Score: 0/0</span>
+                    </div>
+                    <div id="question" class="text-lg font-medium text-gray-800 mb-6"></div>
+                </div>
 
-      <!-- Server Status Tab -->
-      <div id="server-status" class="tab-content">
-        <h2>Server Status</h2>
-        <div class="status-container">
-          <div class="status-item">
-            <h3>FTB Infinity Evolved (BETA - Report Any Compatibility Issues) - 140.238.142.30</h3>
-            <div class="status-light" data-status="ftb-infinity"></div>
-          </div>
-          <div class="status-item">
-            <h3>Dark RPG (1.20.1 Fabric)</h3>
-            <div class="status-light" data-status="ftb-infinity"></div>
-          </div>
-          <div class="status-item">
-            <h3>Cozy RPG (1.20.1 Forge) - 140.238.142.30:25566 </h3> <a href="CozyRPGFinalized.zip" download>Download Pack (CurseForge)</a>
-            <div class="status-light green" data-status="vanilla"></div>
-          </div>
+                <div id="options" class="grid gap-4">
+                    <!-- Options will be inserted here by JavaScript -->
+                </div>
+            </div>
+
+            <div id="results-screen" class="hidden text-center">
+                <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
+                    <h3 class="text-2xl font-bold mb-4">Quiz Complete!</h3>
+                    <div id="result-message" class="text-lg mb-6"></div>
+                    <div id="score-display" class="text-4xl font-bold mb-6"></div>
+                    <div class="flex justify-center space-x-4">
+                        <button id="retake-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-all">
+                            Retake Quiz
+                        </button>
+                        <button id="surprise-btn" class="confetti-button bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-all">
+                            Birthday Surprise
+                        </button>
+                    </div>
+                </div>
+                <div id="celebration" class="hidden"></div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <div id="video-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg p-4 w-full max-w-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">🎉 Birthday Surprise! 🎉</h3>
+                <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="aspect-w-16 aspect-h-9">
+                <iframe id="youtube-embed" class="w-full h-64" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions (New Brunswick adjusted)
+        const questions = [
+            {
+                question: "What does a red octagon-shaped sign mean?",
+                options: ["Yield to other vehicles", "Stop completely", "Railroad crossing", "Do not enter"],
+                answer: 1
+            },
+            {
+                question: "In New Brunswick, the speed limit in a school zone during operating hours is usually:",
+                options: ["30 km/h", "50 km/h", "40 km/h", "60 km/h"],
+                answer: 1
+            },
+            {
+                question: "What is the legal blood alcohol concentration (BAC) for a driver under 21 in NB?",
+                options: ["0.05%", "0.00%", "0.08%", "0.10%"],
+                answer: 1
+            },
+            {
+                question: "How long must you hold a Class 7 Learner's license in NB before taking the road test?",
+                options: ["3 months", "6 months", "12 months", "24 months"],
+                answer: 1
+            },
+            {
+                question: "What should you do if you encounter black ice while driving?",
+                options: ["Slam on the brakes", "Steer gently and avoid sudden movements", "Accelerate to regain control", "Turn on hazard lights and stop abruptly"],
+                answer: 1
+            },
+            {
+                question: "When approaching a yield sign, you must:",
+                options: ["Stop completely", "Slow down and give right-of-way", "Speed up to merge", "Ignore it if no traffic is present"],
+                answer: 1
+            },
+            {
+                question: "When parking downhill with a curb, you should turn your wheels:",
+                options: ["Away from the curb", "Toward the curb", "Straight ahead", "It doesn't matter"],
+                answer: 1
+            },
+            {
+                question: "You must use headlights:",
+                options: ["Only at night", "From 30 minutes after sunset to 30 minutes before sunrise", "Only in heavy rain", "Only on highways"],
+                answer: 1
+            },
+            {
+                question: "The recommended following distance in good weather is:",
+                options: ["1 second", "2 seconds", "4 seconds", "5 seconds"],
+                answer: 1
+            },
+            {
+                question: "When driving in fog, you should use:",
+                options: ["Low-beam headlights", "High-beam headlights", "Hazard lights", "No lights"],
+                answer: 0
+            },
+            {
+                question: "What is the safest way to handle a skid?",
+                options: ["Slam on the brakes", "Steer in the direction you want to go", "Accelerate quickly", "Close your eyes"],
+                answer: 1
+            },
+            {
+                question: "When passing a cyclist, you should leave at least:",
+                options: ["1 meter (3 feet) of space", "0.5 meters", "2 meters", "As close as possible"],
+                answer: 0
+            },
+            {
+                question: "Failing to stop for a school bus with flashing red lights can result in:",
+                options: ["A warning", "A fine and demerit points", "No penalty", "A parking ticket"],
+                answer: 1
+            },
+            {
+                question: "If you accumulate too many demerit points, you may:",
+                options: ["Lose your license", "Pay higher insurance", "Attend a driver improvement course", "All of the above"],
+                answer: 3
+            },
+            {
+                question: "Before changing lanes, you should always:",
+                options: ["Check mirrors and blind spots", "Speed up", "Honk your horn", "Turn on hazard lights"],
+                answer: 0
+            },
+            {
+                question: "The safest place for a child under 13 is:",
+                options: ["The front seat", "The back seat with a seatbelt/booster", "On a parent's lap", "The trunk"],
+                answer: 1
+            },
+            {
+                question: "When driving near a construction zone, you should:",
+                options: ["Ignore workers", "Slow down and follow signs", "Honk at workers", "Speed up to pass quickly"],
+                answer: 1
+            },
+            {
+                question: "What does a flashing green light at an intersection mean?",
+                options: ["Advanced green (protected left turn)", "Pedestrian crossing", "Emergency vehicle approaching", "Traffic signal malfunction"],
+                answer: 0
+            },
+            {
+                question: "When a streetcar is stopped to pick up passengers, you must:",
+                options: ["Pass on the left if safe", "Stop behind the rear doors and wait", "Honk and proceed slowly", "Speed up to pass quickly"],
+                answer: 1
+            },
+            {
+                question: "What does a blue circular sign with a white arrow pointing left indicate?",
+                options: ["Keep left", "Mandatory left turn", "One-way road", "No left turns"],
+                answer: 1
+            },
+            {
+                question: "What should you do when an emergency vehicle approaches with sirens on?",
+                options: ["Speed up to clear the way", "Pull over to the right and stop", "Continue driving normally", "Flash your headlights"],
+                answer: 1
+            },
+            {
+                question: "The best way to avoid highway fatigue is to:",
+                options: ["Drink coffee", "Take breaks every 2 hours", "Speed up to arrive faster", "Open all windows"],
+                answer: 1
+            },
+            {
+                question: "What does this sign mean? (Yellow diamond with two arrows, one straight, one curved)",
+                options: ["Road curves ahead", "Two-way traffic", "Divided highway begins", "Lane ends"],
+                answer: 0
+            },
+            {
+                question: "In New Brunswick, when must you stop for a pedestrian?",
+                options: ["Only at marked crosswalks", "At any crosswalk, marked or unmarked", "Only when a crossing guard is present", "Only in school zones"],
+                answer: 1
+            },
+            {
+                question: "What restrictions apply to Class 7 Learner's license holders in NB?",
+                options: ["No driving between midnight and 5am", "No passengers under 19 unless supervised", "No towing trailers", "All of the above"],
+                answer: 3
+            }
+        ];
+
+        // Shuffle questions array
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // DOM elements
+        const quizContainer = document.getElementById('quiz-container');
+        const introScreen = document.getElementById('intro-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const questionElement = document.getElementById('question');
+        const optionsContainer = document.getElementById('options');
+        const questionNumberElement = document.getElementById('question-number');
+        const scoreElement = document.getElementById('score');
+        const resultMessageElement = document.getElementById('result-message');
+        const scoreDisplayElement = document.getElementById('score-display');
+        const celebrationElement = document.getElementById('celebration');
+        const startBtn = document.getElementById('start-btn');
+        const retakeBtn = document.getElementById('retake-btn');
+        const surpriseBtn = document.getElementById('surprise-btn');
+        const videoModal = document.getElementById('video-modal');
+        const closeModal = document.getElementById('close-modal');
+        const youtubeEmbed = document.getElementById('youtube-embed');
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let shuffledQuestions = [];
+
+        // Start quiz
+        startBtn.addEventListener('click', () => {
+            shuffledQuestions = shuffleArray([...questions]);
+            currentQuestionIndex = 0;
+            score = 0;
+            introScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            showQuestion();
+        });
+
+        // Show question
+        function showQuestion() {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+            questionNumberElement.textContent = `Q${currentQuestionIndex + 1}`;
+            scoreElement.textContent = `Score: ${score}/${currentQuestionIndex}`;
+            
+            optionsContainer.innerHTML = '';
+            currentQuestion.options.forEach((option, index) => {
+                const optionElement = document.createElement('button');
+                optionElement.className = 'bg-white p-4 rounded-lg shadow-md text-left font-medium text-gray-800 hover:bg-blue-50 transition-colors';
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectAnswer(index));
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+
+        // Select answer
+        function selectAnswer(selectedIndex) {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            const optionButtons = optionsContainer.querySelectorAll('button');
+            
+            // Disable all buttons
+            optionButtons.forEach(button => {
+                button.disabled = true;
+            });
+            
+            // Mark correct/incorrect
+            if (selectedIndex === currentQuestion.answer) {
+                optionButtons[selectedIndex].classList.add('correct');
+                score++;
+            } else {
+                optionButtons[selectedIndex].classList.add('incorrect');
+                optionButtons[currentQuestion.answer].classList.add('correct', 'sparkle');
+            }
+            
+            // Update score display
+            scoreElement.textContent = `Score: ${score}/${currentQuestionIndex + 1}`;
+            
+            // Move to next question or show results
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < shuffledQuestions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500);
+        }
+
+        // Show results
+        function showResults() {
+            quizScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            const percentage = Math.round((score / shuffledQuestions.length) * 100);
+            scoreDisplayElement.textContent = `${score}/${shuffledQuestions.length} (${percentage}%)`;
+            
+            // Result message
+            if (percentage >= 90) {
+                resultMessageElement.textContent = "Excellent! You're ready for your NB driver's test!";
+                triggerFireworks();
+            } else if (percentage >= 80) {
+                resultMessageElement.textContent = "Great job! You're almost there!";
+                triggerConfetti();
+            } else if (percentage >= 70) {
+                resultMessageElement.textContent = "Good effort! Review and try again!";
+                triggerSparkles();
+            } else {
+                resultMessageElement.textContent = "Keep practicing! Review the NB Driver's Handbook and try again.";
+            }
+        }
+
+        // Celebration effects
+        function triggerSparkles() {
+            celebrationElement.innerHTML = '';
+            celebrationElement.classList.remove('hidden');
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = `${Math.random() * 100}%`;
+                    sparkle.style.top = `${Math.random() * 100}%`;
+                    celebrationElement.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 2000);
+                }, i * 200);
+            }
+        }
+
+        function triggerConfetti() {
+            celebrationElement.classList.remove('hidden');
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function triggerFireworks() {
+            celebrationElement.classList.remove('hidden');
+            const duration = 15 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+            
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                
+                const particleCount = 50 * (timeLeft / duration);
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                });
+                confetti({
+                    ...defaults,
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                });
+            }, 250);
+        }
+
+        // Retake quiz
+        retakeBtn.addEventListener('click', () => {
+            resultsScreen.classList.add('hidden');
+            celebrationElement.classList.add('hidden');
+            shuffledQuestions = shuffleArray([...questions]);
+            currentQuestionIndex = 0;
+            score = 0;
+            quizScreen.classList.remove('hidden');
+            showQuestion();
+        });
+
+        // Birthday surprise
+        surpriseBtn.addEventListener('click', () => {
+            youtubeEmbed.src = "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1";
+            videoModal.classList.remove('hidden');
+        });
+
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            youtubeEmbed.src = "";
+            videoModal.classList.add('hidden');
+        });
+
+        // Close modal when clicking outside
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                youtubeEmbed.src = "";
+                videoModal.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
