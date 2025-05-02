@@ -1,463 +1,1612 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎂 Chelsea's Driver's Quiz 🎂</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        @keyframes glow-green {
-            0% { box-shadow: 0 0 5px #4ade80; }
-            50% { box-shadow: 0 0 20px #4ade80; }
-            100% { box-shadow: 0 0 5px #4ade80; }
-        }
-        @keyframes glow-red {
-            0% { box-shadow: 0 0 5px #f87171; }
-            50% { box-shadow: 0 0 20px #f87171; }
-            100% { box-shadow: 0 0 5px #f87171; }
-        }
-        .correct {
-            animation: glow-green 1.5s ease-in-out;
-            background-color: #dcfce7;
-        }
-        .incorrect {
-            animation: glow-red 1.5s ease-in-out;
-            background-color: #fee2e2;
-        }
-        .sparkle {
-            position: relative;
-        }
-        .sparkle::after {
-            content: "✨";
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.5rem;
-            animation: sparkle 2s ease-out;
-        }
-        @keyframes sparkle {
-            0% { opacity: 0; transform: translateX(-50%) scale(0.5); }
-            50% { opacity: 1; transform: translateX(-50%) scale(1.2); }
-            100% { opacity: 0; transform: translateX(-50%) scale(0.5); }
-        }
-        .confetti-button:hover {
-            background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-            background-size: 400% 400%;
-            animation: gradient 3s ease infinite;
-        }
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-    </style>
+  <title>Lilly & Ethan's Ultimate Weed & Vape Tycoon</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #f9c5d1 0%, #f2a2e8 50%, #c5b9ff 100%);
+      color: #5a2d82;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    #game-container {
+      display: grid;
+      grid-template-columns: 250px 1fr 300px;
+      height: 100vh;
+    }
+    css
+
+#minigame-area {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+#conveyor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: #d1c4e9;
+  border-top: 2px solid #9575cd;
+}
+
+#player {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 80px;
+  background: #ff80ab;
+  border-radius: 15px 15px 0 0;
+  z-index: 10;
+}
+    #player::after {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      width: 40px;
+      height: 20px;
+      background: #ff80ab;
+      border-radius: 50%;
+      transform: translateX(-50%);
+    }
+    .falling-item {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 5;
+  transition: transform 0.1s ease;
+  pointer-events: none; /* This prevents items from blocking clicks */
+}
+    .falling-item.weed {
+      background-image: url('https://i.imgur.com/JYQ3q3P.png');
+      filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.7));
+    }
+    .falling-item.money {
+      background-image: url('https://i.imgur.com/5Jw6Q9a.png');
+      filter: drop-shadow(0 0 5px rgba(255, 193, 7, 0.7));
+    }
+    .falling-item.shiny {
+      animation: glow 0.8s infinite alternate;
+      transform: scale(1.2);
+    }
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 5px gold) brightness(1.2); }
+      to { filter: drop-shadow(0 0 15px gold) brightness(1.5); }
+    }
+    #minigame-stats {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: 2px solid #b388ff;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    #farm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+      padding: 20px;
+      overflow-y: auto;
+      align-content: start;
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .farm {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      height: 130px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      border: 2px solid #d1c4e9;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      animation: bounce 2s infinite ease-in-out;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    .farm:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 8px 20px rgba(179, 136, 255, 0.4);
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .farm img {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto;
+      transition: all 0.5s ease-in-out;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.2));
+    }
+    .farm:hover img {
+      transform: scale(1.1) rotate(5deg);
+    }
+    .farm-name {
+      font-weight: bold;
+      margin: 5px 0;
+      font-size: 14px;
+      position: relative;
+      z-index: 2;
+      color: #7e57c2;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.7);
+    }
+    .farm-income {
+      color: #689f38;
+      font-size: 12px;
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.7);
+      padding: 3px 6px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+    .farm-pulse {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: radial-gradient(circle, rgba(179, 136, 255, 0.3) 0%, rgba(179, 136, 255, 0) 70%);
+      animation: pulse 3s infinite;
+      opacity: 0;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 0.3; }
+      100% { transform: scale(0.8); opacity: 0; }
+    }
+    .money-emoji {
+      position: absolute;
+      font-size: 16px;
+      animation: floatUp 1.5s ease-out forwards;
+      pointer-events: none;
+      z-index: 10;
+      text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-80px) scale(0.8); opacity: 0; }
+    }
+    #sidebar {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      border-left: 3px dashed #b388ff;
+      box-shadow: inset 0 0 20px rgba(179, 136, 255, 0.3);
+    }
+    #resources {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      border: 2px solid #d1c4e9;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    #character-area {
+      flex-grow: 1;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      padding: 15px;
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 1fr 120px;
+      border: 2px solid #d1c4e9;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    #character-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-content: flex-start;
+      overflow-y: auto;
+      padding: 5px;
+    }
+    #kuromi-area {
+      background: rgba(179, 136, 255, 0.3);
+      border-radius: 15px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      border: 2px dashed #b388ff;
+    }
+    .character {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 2px solid #ff80ab;
+      object-fit: cover;
+      animation: bounce 3s infinite ease-in-out;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    #farm-info {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 15px;
+      display: none;
+      border: 2px solid #d1c4e9;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .upgrade-btn {
+      background: linear-gradient(to right, #b388ff, #ff80ab);
+      color: white;
+      border: none;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 20px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 3px 10px rgba(179, 136, 255, 0.4);
+    }
+    .upgrade-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(179, 136, 255, 0.6);
+    }
+    .upgrade-btn:disabled {
+      background: #d1c4e9;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    #stats {
+      margin-top: 10px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 8px;
+      border-radius: 10px;
+    }
+    #buy-menu {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      z-index: 100;
+      max-height: 70vh;
+      overflow-y: auto;
+      display: none;
+      width: 300px;
+      border: 3px solid #b388ff;
+    }
+    #buy-menu h3 {
+      margin-top: 0;
+      border-bottom: 2px dashed #b388ff;
+      padding-bottom: 10px;
+      text-align: center;
+      color: #7e57c2;
+    }
+    .buy-option {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 2px dashed #d1c4e9;
+      gap: 12px;
+    }
+    .buy-option-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .buy-btn {
+      background: linear-gradient(to right, #ff80ab, #b388ff);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: bold;
+      box-shadow: 0 3px 8px rgba(179, 136, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+    .buy-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(179, 136, 255, 0.6);
+    }
+    .buy-btn:disabled {
+      background: #d1c4e9;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .requirements {
+      font-size: 12px;
+      color: #9575cd;
+      margin-top: 5px;
+      font-style: italic;
+    }
+    .requirement {
+      display: flex;
+      align-items: center;
+      margin: 5px 0;
+      font-size: 12px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.7);
+    }
+    .requirement.met {
+      color: #689f38;
+    }
+    .requirement.unmet {
+      color: #e53935;
+    }
+    .requirement-icon {
+      margin-right: 8px;
+      font-size: 16px;
+    }
+    #kuromi-img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid #ff80ab;
+      box-shadow: 0 5px 15px rgba(255, 128, 171, 0.5);
+    }
+    #kuromi-img:hover {
+      transform: scale(1.1) rotate(10deg);
+    }
+    #kuromi-level {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #7e57c2;
+      font-weight: bold;
+    }
+    #kuromi-upgrade-btn {
+      background: linear-gradient(to right, #ff80ab, #b388ff);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      box-shadow: 0 3px 10px rgba(179, 136, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+    #kuromi-upgrade-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(179, 136, 255, 0.6);
+    }
+    #kuromi-upgrade-btn:disabled {
+      background: #d1c4e9;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    #achievements {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      z-index: 100;
+      max-height: 80vh;
+      overflow-y: auto;
+      display: none;
+      width: 280px;
+      border: 3px solid #b388ff;
+    }
+    #achievements h3 {
+      margin-top: 0;
+      border-bottom: 2px dashed #b388ff;
+      padding-bottom: 10px;
+      text-align: center;
+      color: #7e57c2;
+    }
+    .achievement {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 2px dashed #d1c4e9;
+    }
+    .achievement-icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      font-size: 30px;
+      text-align: center;
+      line-height: 40px;
+      border-radius: 50%;
+      background: rgba(179, 136, 255, 0.2);
+      border: 2px solid #b388ff;
+    }
+    .achievement.unlocked .achievement-icon {
+      filter: brightness(1);
+      background: rgba(179, 136, 255, 0.3);
+    }
+    .achievement.locked .achievement-icon {
+      filter: brightness(0.7);
+      background: rgba(221, 221, 221, 0.3);
+      border-color: #ddd;
+    }
+    .achievement-info {
+      flex: 1;
+    }
+    .achievement-name {
+      font-weight: bold;
+      color: #7e57c2;
+      margin-bottom: 3px;
+    }
+    .achievement-desc {
+      font-size: 12px;
+      color: #9575cd;
+    }
+    
+    /* Gambling section */
+    #gamble-menu {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      z-index: 100;
+      display: none;
+      width: 300px;
+      border: 3px solid #ff80ab;
+    }
+    #gamble-menu h3 {
+      margin-top: 0;
+      border-bottom: 2px dashed #ff80ab;
+      padding-bottom: 10px;
+      text-align: center;
+      color: #e91e63;
+    }
+    #gamble-result {
+      text-align: center;
+      margin: 15px 0;
+      font-size: 24px;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #gamble-btn {
+      background: linear-gradient(to right, #ff80ab, #e91e63);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+      font-size: 16px;
+      box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+      transition: all 0.3s ease;
+    }
+    #gamble-btn:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(233, 30, 99, 0.6);
+    }
+    #gamble-btn:disabled {
+      background: #d1c4e9;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    #gamble-cost {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #e91e63;
+    }
+    #open-gamble {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      background: linear-gradient(to right, #ff80ab, #e91e63);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 24px;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+      z-index: 99;
+      transition: all 0.3s ease;
+    }
+    #open-gamble:hover {
+      transform: translateY(-3px) rotate(15deg);
+      box-shadow: 0 8px 20px rgba(233, 30, 99, 0.6);
+    }
+    #close-gamble {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: #e91e63;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    
+    /* Treasure chest animation */
+    .treasure-chest {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.5);
+      font-size: 100px;
+      z-index: 1000;
+      animation: chestOpen 1.5s ease-out forwards;
+      text-shadow: 0 5px 15px rgba(255, 215, 0, 0.8);
+      opacity: 0;
+    }
+    @keyframes chestOpen {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      20% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      40% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      60% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+    }
+    .treasure-reward {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 40px;
+      z-index: 1001;
+      animation: rewardFloat 2s ease-out forwards;
+      text-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      opacity: 0;
+    }
+    @keyframes rewardFloat {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      20% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      100% { transform: translate(-50%, -150%) scale(1); opacity: 0; }
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(#b388ff, #ff80ab);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(#9575cd, #e91e63);
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
-    <div class="container mx-auto px-4 py-8 max-w-md">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-blue-600 mb-2">New Brunswick</h1>
-            <h2 class="text-2xl font-semibold text-purple-600">🎂 Chelsea's Beginners's Quiz 🎂</h2>
-            <div class="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-400 mx-auto mt-2 rounded-full"></div>
-        </header>
-
-        <div id="quiz-container">
-            <div id="intro-screen" class="text-center">
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
-                    <h3 class="text-xl font-bold text-blue-700 mb-4">Test Your Knowledge!</h3>
-                    <p class="text-gray-600 mb-6">Take this 25-question quiz to prepare for your New Brunswick Class 7 Learner's Test.</p>
-                    <button id="start-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full transition-all transform hover:scale-105 shadow-md">
-                        Start Quiz
-                    </button>
-                </div>
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h4 class="font-bold text-purple-700 mb-2">Did You Know?</h4>
-                    <p class="text-gray-600 text-sm">In NB, school zones typically have a 50 km/h speed limit, and there's zero tolerance for alcohol for drivers under 21.</p>
-                </div>
-            </div>
-
-            <div id="quiz-screen" class="hidden">
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <span id="question-number" class="font-bold text-blue-500">Q1</span>
-                        <span id="score" class="font-bold text-purple-500">Score: 0/0</span>
-                    </div>
-                    <div id="question" class="text-lg font-medium text-gray-800 mb-6"></div>
-                </div>
-
-                <div id="options" class="grid gap-4">
-                    <!-- Options will be inserted here by JavaScript -->
-                </div>
-            </div>
-
-            <div id="results-screen" class="hidden text-center">
-                <div class="bg-white rounded-xl shadow-lg p-8 mb-6">
-                    <h3 class="text-2xl font-bold mb-4">Quiz Complete!</h3>
-                    <div id="result-message" class="text-lg mb-6"></div>
-                    <div id="score-display" class="text-4xl font-bold mb-6"></div>
-                    <div class="flex justify-center space-x-4">
-                        <button id="retake-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-all">
-                            Retake Quiz
-                        </button>
-                        <button id="surprise-btn" class="confetti-button bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-all">
-                            Birthday Surprise
-                        </button>
-                    </div>
-                </div>
-                <div id="celebration" class="hidden"></div>
-            </div>
-        </div>
+<body>
+  <div id="game-container">
+    <div id="minigame-area">
+      <div id="minigame-stats">
+        Items Caught: <span id="items-caught">0</span><br>
+        Shiny Items: <span id="shiny-caught">0</span>
+      </div>
+      <div id="player"></div>
+      <div id="conveyor"></div>
     </div>
-
-    <div id="video-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg p-4 w-full max-w-lg">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold">🎉 Birthday Surprise! 🎉</h3>
-                <button id="close-modal" class="text-gray-500 hover:text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <div class="aspect-w-16 aspect-h-9">
-                <iframe id="youtube-embed" class="w-full h-64" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
+    
+    <div id="farm-grid">
+      <!-- Farms will be added here dynamically -->
     </div>
+    
+    <div id="sidebar">
+      <div id="resources">
+        <h2>💰 $<span id="money">0</span></h2>
+        <h3>⚡ $<span id="mps">0</span>/s</h3>
+      </div>
+      
+      <div id="character-area">
+        <div id="character-grid">
+          <h3 style="width: 100%; margin: 5px 0; text-align: center;">Unlocked Characters</h3>
+          <!-- Characters will be added here dynamically -->
+        </div>
+        
+        <div id="kuromi-area">
+          <img id="kuromi-img" src="kuromi1.png" alt="Kuromi">
+          <div id="kuromi-level">Level 0</div>
+          <button id="kuromi-upgrade-btn">Upgrade ($10,000)</button>
+        </div>
+      </div>
+      
+      <div id="farm-info">
+        <h3 id="selected-farm-name">Farm Name</h3>
+        <p id="selected-farm-income">Income: $0/s</p>
+        <div id="upgrade-requirements"></div>
+        <button id="upgrade-btn" class="upgrade-btn">Upgrade</button>
+        <div id="stats">
+          <p>Total Farms: <span id="total-farms">0</span></p>
+          <p>Total Income: $<span id="total-income">0</span>/s</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <script>
-        // Quiz questions (New Brunswick adjusted)
-        const questions = [
-            {
-                question: "What does a red octagon-shaped sign mean?",
-                options: ["Yield to other vehicles", "Stop completely", "Railroad crossing", "Do not enter"],
-                answer: 1
-            },
-            {
-                question: "In New Brunswick, the speed limit in a school zone during operating hours is usually:",
-                options: ["30 km/h", "50 km/h", "40 km/h", "60 km/h"],
-                answer: 1
-            },
-            {
-                question: "What is the legal blood alcohol concentration (BAC) for a driver under 21 in NB?",
-                options: ["0.05%", "0.00%", "0.08%", "0.10%"],
-                answer: 1
-            },
-            {
-                question: "How long must you hold a Class 7 Learner's license in NB before taking the road test?",
-                options: ["3 months", "6 months", "12 months", "24 months"],
-                answer: 1
-            },
-            {
-                question: "What should you do if you encounter black ice while driving?",
-                options: ["Slam on the brakes", "Steer gently and avoid sudden movements", "Accelerate to regain control", "Turn on hazard lights and stop abruptly"],
-                answer: 1
-            },
-            {
-                question: "When approaching a yield sign, you must:",
-                options: ["Stop completely", "Slow down and give right-of-way", "Speed up to merge", "Ignore it if no traffic is present"],
-                answer: 1
-            },
-            {
-                question: "When parking downhill with a curb, you should turn your wheels:",
-                options: ["Away from the curb", "Toward the curb", "Straight ahead", "It doesn't matter"],
-                answer: 1
-            },
-            {
-                question: "You must use headlights:",
-                options: ["Only at night", "From 30 minutes after sunset to 30 minutes before sunrise", "Only in heavy rain", "Only on highways"],
-                answer: 1
-            },
-            {
-                question: "The recommended following distance in good weather is:",
-                options: ["1 second", "2 seconds", "4 seconds", "5 seconds"],
-                answer: 1
-            },
-            {
-                question: "When driving in fog, you should use:",
-                options: ["Low-beam headlights", "High-beam headlights", "Hazard lights", "No lights"],
-                answer: 0
-            },
-            {
-                question: "What is the safest way to handle a skid?",
-                options: ["Slam on the brakes", "Steer in the direction you want to go", "Accelerate quickly", "Close your eyes"],
-                answer: 1
-            },
-            {
-                question: "When passing a cyclist, you should leave at least:",
-                options: ["1 meter (3 feet) of space", "0.5 meters", "2 meters", "As close as possible"],
-                answer: 0
-            },
-            {
-                question: "Failing to stop for a school bus with flashing red lights can result in:",
-                options: ["A warning", "A fine and demerit points", "No penalty", "A parking ticket"],
-                answer: 1
-            },
-            {
-                question: "If you accumulate too many demerit points, you may:",
-                options: ["Lose your license", "Pay higher insurance", "Attend a driver improvement course", "All of the above"],
-                answer: 3
-            },
-            {
-                question: "Before changing lanes, you should always:",
-                options: ["Check mirrors and blind spots", "Speed up", "Honk your horn", "Turn on hazard lights"],
-                answer: 0
-            },
-            {
-                question: "The safest place for a child under 13 is:",
-                options: ["The front seat", "The back seat with a seatbelt/booster", "On a parent's lap", "The trunk"],
-                answer: 1
-            },
-            {
-                question: "When driving near a construction zone, you should:",
-                options: ["Ignore workers", "Slow down and follow signs", "Honk at workers", "Speed up to pass quickly"],
-                answer: 1
-            },
-            {
-                question: "What does a flashing green light at an intersection mean?",
-                options: ["Advanced green (protected left turn)", "Pedestrian crossing", "Emergency vehicle approaching", "Traffic signal malfunction"],
-                answer: 0
-            },
-            {
-                question: "When a streetcar is stopped to pick up passengers, you must:",
-                options: ["Pass on the left if safe", "Stop behind the rear doors and wait", "Honk and proceed slowly", "Speed up to pass quickly"],
-                answer: 1
-            },
-            {
-                question: "What does a blue circular sign with a white arrow pointing left indicate?",
-                options: ["Keep left", "Mandatory left turn", "One-way road", "No left turns"],
-                answer: 1
-            },
-            {
-                question: "What should you do when an emergency vehicle approaches with sirens on?",
-                options: ["Speed up to clear the way", "Pull over to the right and stop", "Continue driving normally", "Flash your headlights"],
-                answer: 1
-            },
-            {
-                question: "The best way to avoid highway fatigue is to:",
-                options: ["Drink coffee", "Take breaks every 2 hours", "Speed up to arrive faster", "Open all windows"],
-                answer: 1
-            },
-            {
-                question: "What does this sign mean? (Yellow diamond with two arrows, one straight, one curved)",
-                options: ["Road curves ahead", "Two-way traffic", "Divided highway begins", "Lane ends"],
-                answer: 0
-            },
-            {
-                question: "In New Brunswick, when must you stop for a pedestrian?",
-                options: ["Only at marked crosswalks", "At any crosswalk, marked or unmarked", "Only when a crossing guard is present", "Only in school zones"],
-                answer: 1
-            },
-            {
-                question: "What restrictions apply to Class 7 Learner's license holders in NB?",
-                options: ["No driving between midnight and 5am", "No passengers under 19 unless supervised", "No towing trailers", "All of the above"],
-                answer: 3
-            }
+  <div id="buy-menu">
+    <h3>Buy New Farms</h3>
+    <div id="buy-options">
+      <!-- Farm purchase options will be added here -->
+    </div>
+    <button id="close-buy-menu" style="margin-top: 10px; width: 100%;">Close</button>
+  </div>
+
+  <button id="open-buy-menu" style="position: fixed; bottom: 20px; right: 20px; background: linear-gradient(#b388ff, #7e57c2); color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(126, 87, 194, 0.4); z-index: 99; transition: all 0.3s ease;">+</button>
+
+  <div id="achievements">
+    <h3>Shiny Collection</h3>
+    <div id="achievements-list">
+      <!-- Achievements will be added here dynamically -->
+    </div>
+    <button id="close-achievements" style="margin-top: 10px; width: 100%;">Close</button>
+  </div>
+
+  <button id="open-achievements" style="position: fixed; top: 20px; right: 20px; background: linear-gradient(#b388ff, #7e57c2); color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(126, 87, 194, 0.4); z-index: 99; transition: all 0.3s ease;">🏆</button>
+  
+  <!-- Gambling section -->
+  <div id="gamble-menu">
+    <button id="close-gamble">✕</button>
+    <h3>Treasure Chest</h3>
+    <div id="gamble-result">Try your luck!</div>
+    <button id="gamble-btn">Open Chest ($1,000)</button>
+    <div id="gamble-cost">5% chance for rare rewards!</div>
+  </div>
+  
+  <button id="open-gamble">🎰</button>
+
+  <script>
+    // Game State
+    let money = 100; // Starting money for testing
+    let moneyPerSecond = 0;
+    let totalFarms = 0;
+    let selectedFarm = null;
+    let kuromiLevel = 0;
+    const kuromiUpgradeCosts = [10000, 25000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 10000000];
+    const kuromiImages = [
+      "kuromi1.png", // Kuromi level 1
+      "kuromi2.png", // Kuromi level 2
+      "kuromi3.png", // Kuromi level 3
+      "kuromi4.png", // Kuromi level 4
+      "kuromi5.png", // Kuromi level 5
+      "kuromi6.png", // Kuromi level 6
+      "kuromi7.png", // Kuromi level 7
+      "kuromi8.png", // Kuromi level 8
+      "kuromi9.png", // Kuromi level 9
+      "kuromi10.png"  // Kuromi level 10
+    ];
+    
+    // Minigame state
+    let playerX = 125;
+    const playerSpeed = 10;
+    let itemsCaught = 0;
+    let shinyItemsCaught = 0;
+    let fallingItems = [];
+    let achievements = [
+      { id: 1, name: "Golden Leaf", desc: "Catch a shiny weed item", unlocked: false, img: "🍂" },
+      { id: 2, name: "Diamond Nug", desc: "Catch 3 shiny items", unlocked: false, img: "💎" },
+      { id: 3, name: "Rainbow Vape", desc: "Catch 10 shiny items", unlocked: false, img: "🌈" },
+      { id: 4, name: "Galaxy Joint", desc: "Catch 25 shiny items", unlocked: false, img: "🌌" },
+      { id: 5, name: "Mystery Mushroom", desc: "Catch 50 shiny items", unlocked: false, img: "🍄" }
+    ];
+    
+    // Farm types with name, income, cost, and image
+    const farmTypes = [
+      { 
+        id: 0, 
+        name: "Makeshift Farm", 
+        income: 1, 
+        cost: 10, 
+        img: "🌱",
+        description: "A simple setup with just a few plants",
+        nextUpgrade: 1
+      },
+      { 
+        id: 1, 
+        name: "Backyard Farm", 
+        income: 5, 
+        cost: 50, 
+        img: "🏡",
+        description: "Your backyard converted to a grow op",
+        upgradeRequirements: [
+          { type: 0, count: 3 } // Need 3 Makeshift Farms
+        ],
+        nextUpgrade: 2
+      },
+      { 
+        id: 2, 
+        name: "Greenhouse", 
+        income: 10, 
+        cost: 100, 
+        img: "🌿",
+        description: "Proper environment for better yields",
+        upgradeRequirements: [
+          { type: 1, count: 2 }, // 2 Backyard Farms
+          { type: 0, count: 5 }  // And 5 Makeshift
+        ],
+        nextUpgrade: 3
+      },
+      { 
+        id: 3, 
+        name: "Farmyard", 
+        income: 20, 
+        cost: 250, 
+        img: "🌻",
+        description: "Expanding your operations",
+        upgradeRequirements: [
+          { type: 2, count: 1 }, // 1 Greenhouse
+          { type: 1, count: 3 }  // 3 Backyard
+        ],
+        nextUpgrade: 4
+      },
+      { 
+        id: 4, 
+        name: "Dispensary", 
+        income: 50, 
+        cost: 500, 
+        img: "🏪",
+        description: "Legal retail front for your product",
+        upgradeRequirements: [
+          { type: 3, count: 2 }, // 2 Farmyards
+          { type: 2, count: 2 }  // 2 Greenhouses
+        ],
+        nextUpgrade: 5
+      },
+      { 
+        id: 5, 
+        name: "Shroom Room", 
+        income: 75, 
+        cost: 1000, 
+        img: "🍄",
+        description: "Diversifying into fungi",
+        upgradeRequirements: [
+          { type: 4, count: 1 }, // 1 Dispensary
+          { type: 3, count: 3 }  // 3 Farmyards
+        ],
+        nextUpgrade: 6
+      },
+      { 
+        id: 6, 
+        name: "Crystal Cavern", 
+        income: 100, 
+        cost: 2500, 
+        img: "💎",
+        description: "Mining the earth's treasures",
+        upgradeRequirements: [
+          { type: 5, count: 2 }, // 2 Shroom Rooms
+          { type: 4, count: 2 }  // 2 Dispensaries
+        ],
+        nextUpgrade: 7
+      },
+      { 
+        id: 7, 
+        name: "Snow Mountain", 
+        income: 200, 
+        cost: 5000, 
+        img: "🏔️",
+        description: "High-altitude premium product",
+        upgradeRequirements: [
+          { type: 6, count: 1 }, // 1 Crystal Cavern
+          { type: 5, count: 3 }  // 3 Shroom Rooms
+        ],
+        nextUpgrade: 8
+      },
+      { 
+        id: 8, 
+        name: "Chicken Jockey", 
+        income: 6969, 
+        cost: 25000, 
+        img: "🐔",
+        description: "The ultimate farming experience",
+        upgradeRequirements: [
+          { type: 7, count: 2 }, // 2 Snow Mountains
+          { type: 6, count: 3 }, // 3 Crystal Caverns
+          { type: 5, count: 5 }  // 5 Shroom Rooms
+        ],
+        nextUpgrade: null
+      }
+    ];
+    
+    // Player's farms
+    let farms = [];
+    
+    // Characters (10 total)
+    const characters = [
+      { name: "Lilly & Ethan", unlocked: true, img: "us.jpg" },
+      { name: "Lady Gaga", cost: 5000, unlocked: false, img: "gaga.jpg" },
+      { name: "Charli XCX", cost: 7500, unlocked: false, img: "charli.png" },
+      { name: "Snoop Dogg", cost: 10000, unlocked: false, img: "steve.png" },
+      { name: "Willie Nelson", cost: 15000, unlocked: false, img: "🎸" },
+      { name: "Seth Rogen", cost: 20000, unlocked: false, img: "🍃" },
+      { name: "Wiz Khalifa", cost: 25000, unlocked: false, img: "🚬" },
+      { name: "Rihanna", cost: 30000, unlocked: false, img: "💄" },
+      { name: "Post Malone", cost: 40000, unlocked: false, img: "🍺" },
+      { name: "Miley Cyrus", cost: 1000, unlocked: false, img: "🌼" }
+    ];
+    
+    // Rare rewards for gambling
+    const rareRewards = [
+      { emoji: "💰", value: 5000, message: "Jackpot! +$5,000" },
+      { emoji: "💎", value: 10000, message: "Diamond! +$10,000" },
+      { emoji: "🏆", value: 25000, message: "Grand Prize! +$25,000" },
+      { emoji: "🌈", value: 50000, message: "Rainbow Luck! +$50,000" },
+      { emoji: "👑", value: 100000, message: "Royal Reward! +$100,000" }
+    ];
+    
+    // DOM Elements
+    const moneyDisplay = document.getElementById('money');
+    const mpsDisplay = document.getElementById('mps');
+    const farmGrid = document.getElementById('farm-grid');
+    const characterGrid = document.getElementById('character-grid');
+    const kuromiImg = document.getElementById('kuromi-img');
+    const kuromiLevelDisplay = document.getElementById('kuromi-level');
+    const kuromiUpgradeBtn = document.getElementById('kuromi-upgrade-btn');
+    const farmInfo = document.getElementById('farm-info');
+    const selectedFarmName = document.getElementById('selected-farm-name');
+    const selectedFarmIncome = document.getElementById('selected-farm-income');
+    const upgradeBtn = document.getElementById('upgrade-btn');
+    const upgradeRequirements = document.getElementById('upgrade-requirements');
+    const totalFarmsDisplay = document.getElementById('total-farms');
+    const totalIncomeDisplay = document.getElementById('total-income');
+    const buyMenu = document.getElementById('buy-menu');
+    const buyOptions = document.getElementById('buy-options');
+    const openBuyMenuBtn = document.getElementById('open-buy-menu');
+    const closeBuyMenuBtn = document.getElementById('close-buy-menu');
+    const player = document.getElementById('player');
+    const itemsCaughtDisplay = document.getElementById('items-caught');
+    const shinyCaughtDisplay = document.getElementById('shiny-caught');
+    const achievementsList = document.getElementById('achievements-list');
+    const openAchievementsBtn = document.getElementById('open-achievements');
+    const closeAchievementsBtn = document.getElementById('close-achievements');
+    const achievementsMenu = document.getElementById('achievements');
+    const gambleMenu = document.getElementById('gamble-menu');
+    const openGambleBtn = document.getElementById('open-gamble');
+    const closeGambleBtn = document.getElementById('close-gamble');
+    const gambleBtn = document.getElementById('gamble-btn');
+    const gambleResult = document.getElementById('gamble-result');
+    
+    // Initialize the game
+    function init() {
+      loadGame();
+      renderBuyMenu();
+      renderFarms();
+      renderCharacters();
+      renderAchievements();
+      updateKuromiDisplay();
+      startGameLoop();
+      startMinigameLoop();
+      setupEventListeners();
+      
+      // Add first farm for free
+      if (farms.length === 0) {
+        addFarm(0);
+      }
+    }
+    
+    // Game loop
+    function startGameLoop() {
+      setInterval(() => {
+        money += moneyPerSecond / 10;
+        updateResourceDisplays();
+        saveGame();
+        
+        // Emit money from farms
+        farms.forEach(farm => {
+          if (Math.random() < 0.05) { // 5% chance per frame to emit money
+            emitMoney(farm);
+          }
+        });
+      }, 100);
+    }
+    
+    // Minigame loop
+    function startMinigameLoop() {
+      // Spawn items
+      setInterval(() => {
+        if (Math.random() < 0.2) { // 20% chance per second to spawn item
+          spawnFallingItem();
+        }
+      }, 1000);
+      
+      // Move items
+      setInterval(() => {
+        moveFallingItems();
+      }, 50);
+    }
+    
+    // Spawn a falling item
+    function spawnFallingItem() {
+  const minigameArea = document.getElementById('minigame-area');
+  const isShiny = Math.random() < 0.05;
+  const types = ['weed', 'money'];
+  const type = types[Math.floor(Math.random() * types.length)];
+  
+  const item = document.createElement('div');
+  item.className = `falling-item ${type} ${isShiny ? 'shiny' : ''}`;
+  
+  // Use emoji as fallback content
+  const emoji = type === 'weed' ? '🌿' : '💰';
+  item.textContent = emoji; // Fallback text
+  item.style.fontSize = '30px'; // Make emoji visible
+  item.style.textAlign = 'center';
+  item.style.lineHeight = '40px';
+  
+  // Position at random x at top of container
+  item.style.left = `${Math.random() * (minigameArea.clientWidth - 40)}px`;
+  item.style.top = '0px';
+  item.style.width = '40px';
+  item.style.height = '40px';
+  
+  minigameArea.appendChild(item);
+  
+  fallingItems.push({
+    element: item,
+    x: parseInt(item.style.left),
+    y: 0,
+    speed: 2 + Math.random() * 3,
+    type: type,
+    shiny: isShiny
+  });
+}
+    
+    // Move all falling items
+    function moveFallingItems() {
+  const minigameArea = document.getElementById('minigame-area');
+  const playerRect = player.getBoundingClientRect();
+  const gameRect = minigameArea.getBoundingClientRect();
+  const conveyorTop = minigameArea.offsetHeight - 20;
+  
+  for (let i = fallingItems.length - 1; i >= 0; i--) {
+    const item = fallingItems[i];
+    item.y += item.speed;
+    item.element.style.top = `${item.y}px`;
+    
+    // Get item position relative to game container
+    const itemRect = item.element.getBoundingClientRect();
+    const itemLeft = itemRect.left - gameRect.left;
+    const itemRight = itemRect.right - gameRect.left;
+    const itemTop = itemRect.top - gameRect.top;
+    const itemBottom = itemRect.bottom - gameRect.top;
+    
+    // Player position relative to game container
+    const playerLeft = playerRect.left - gameRect.left;
+    const playerRight = playerRect.right - gameRect.left;
+    const playerTop = playerRect.top - gameRect.top;
+    const playerBottom = playerRect.bottom - gameRect.top;
+    
+    // Check collision
+    if (
+      itemBottom >= playerTop &&
+      itemTop <= playerBottom &&
+      itemRight >= playerLeft &&
+      itemLeft <= playerRight
+    ) {
+      catchItem(item, i);
+    }
+    // Check if missed (hit conveyor)
+    else if (item.y >= conveyorTop - 30) {
+      item.element.remove();
+      fallingItems.splice(i, 1);
+    }
+  }
+}
+    
+    // Player caught an item
+    function catchItem(item, index) {
+      item.element.remove();
+      fallingItems.splice(index, 1);
+      
+      itemsCaught++;
+      itemsCaughtDisplay.textContent = itemsCaught;
+      
+      if (item.shiny) {
+        shinyItemsCaught++;
+        shinyCaughtDisplay.textContent = shinyItemsCaught;
+        unlockRandomAchievement();
+        money += 1000; // Bonus for shiny
+        showFloatingText("+1000", "#FFD700");
+      } else {
+        const value = item.type === 'weed' ? 10 : 25;
+        money += value;
+        showFloatingText(`+${value}`, item.type === 'weed' ? "#4CAF50" : "#FFC107");
+      }
+      
+      updateResourceDisplays();
+    }
+    
+    // Show floating text
+    function showFloatingText(text, color) {
+      const floatingText = document.createElement('div');
+      floatingText.textContent = text;
+      floatingText.style.position = 'absolute';
+      floatingText.style.left = `${playerX + 30}px`;
+      floatingText.style.top = '50%';
+      floatingText.style.color = color;
+      floatingText.style.fontWeight = 'bold';
+      floatingText.style.fontSize = '20px';
+      floatingText.style.textShadow = '0 2px 3px rgba(0,0,0,0.3)';
+      floatingText.style.animation = 'floatUp 1.5s ease-out forwards';
+      floatingText.style.zIndex = '100';
+      document.getElementById('minigame-area').appendChild(floatingText);
+      
+      setTimeout(() => {
+        floatingText.remove();
+      }, 1500);
+    }
+    
+    // Unlock a random achievement
+    function unlockRandomAchievement() {
+      const lockedAchievements = achievements.filter(a => !a.unlocked);
+      if (lockedAchievements.length > 0) {
+        const randomIndex = Math.floor(Math.random() * lockedAchievements.length);
+        lockedAchievements[randomIndex].unlocked = true;
+        renderAchievements();
+        
+        // Show achievement popup
+        showAchievementPopup(lockedAchievements[randomIndex]);
+      }
+    }
+    
+    // Show achievement popup
+    function showAchievementPopup(achievement) {
+      const popup = document.createElement('div');
+      popup.style.position = 'fixed';
+      popup.style.bottom = '20px';
+      popup.style.left = '50%';
+      popup.style.transform = 'translateX(-50%)';
+      popup.style.background = 'rgba(255, 255, 255, 0.9)';
+      popup.style.padding = '15px';
+      popup.style.borderRadius = '15px';
+      popup.style.border = '3px solid #b388ff';
+      popup.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+      popup.style.zIndex = '1000';
+      popup.style.display = 'flex';
+      popup.style.alignItems = 'center';
+      popup.style.animation = 'slideUp 3s ease-out forwards';
+      
+      popup.innerHTML = `
+        <div style="font-size: 30px; margin-right: 10px;">${achievement.img}</div>
+        <div>
+          <div style="font-weight: bold; color: #7e57c2;">Achievement Unlocked!</div>
+          <div>${achievement.name}</div>
+        </div>
+      `;
+      
+      document.body.appendChild(popup);
+      
+      setTimeout(() => {
+        popup.remove();
+      }, 3000);
+    }
+    
+    // Emit money emoji from a farm
+    function emitMoney(farm) {
+      const farmElement = document.querySelector(`.farm[data-id="${farm.id}"]`);
+      if (!farmElement) return;
+      
+      const rect = farmElement.getBoundingClientRect();
+      const emojiCount = Math.min(Math.floor(farmTypes[farm.type].income / 10), 10) || 1;
+      
+      for (let i = 0; i < emojiCount; i++) {
+        const moneyEmoji = document.createElement('div');
+        moneyEmoji.className = 'money-emoji';
+        moneyEmoji.textContent = '💰';
+        moneyEmoji.style.left = `${rect.left + Math.random() * rect.width}px`;
+        moneyEmoji.style.top = `${rect.top + Math.random() * rect.height}px`;
+        moneyEmoji.style.animationDelay = `${i * 0.1}s`;
+        document.body.appendChild(moneyEmoji);
+        
+        setTimeout(() => {
+          moneyEmoji.remove();
+        }, 1500);
+      }
+    }
+    
+    // Add a new farm
+    function addFarm(typeId) {
+      const farmType = farmTypes[typeId];
+      const farm = {
+        id: Date.now() + Math.random(),
+        type: typeId,
+        x: 0,
+        y: 0
+      };
+      
+      farms.push(farm);
+      totalFarms++;
+      moneyPerSecond += farmType.income;
+      money -= farmType.cost;
+      
+      renderFarm(farm);
+      renderBuyMenu();
+      updateResourceDisplays();
+      checkCharacterUnlocks();
+    }
+    
+    // Check if player can upgrade a farm
+    function canUpgradeFarm(farm) {
+      const farmType = farmTypes[farm.type];
+      if (!farmType.upgradeRequirements) return false;
+      
+      return farmType.upgradeRequirements.every(req => {
+        return farms.filter(f => f.type === req.type).length >= req.count;
+      });
+    }
+    
+    // Upgrade a farm
+    function upgradeFarm(farm) {
+      const currentType = farmTypes[farm.type];
+      if (currentType.nextUpgrade === null) return;
+      
+      const nextType = farmTypes[currentType.nextUpgrade];
+      
+      if (money >= nextType.cost && canUpgradeFarm(farm)) {
+        money -= nextType.cost;
+        moneyPerSecond -= currentType.income;
+        moneyPerSecond += nextType.income;
+        
+        farm.type = currentType.nextUpgrade;
+        
+        renderFarms();
+        renderBuyMenu();
+        updateResourceDisplays();
+        selectFarm(farm); // Refresh farm info
+      }
+    }
+    
+    // Upgrade Kuromi
+    function upgradeKuromi() {
+      if (kuromiLevel >= kuromiUpgradeCosts.length) return;
+      
+      const cost = kuromiUpgradeCosts[kuromiLevel];
+      if (money >= cost) {
+        money -= cost;
+        kuromiLevel++;
+        updateKuromiDisplay();
+        updateResourceDisplays();
+        
+        // Apply Kuromi bonus (double income)
+        moneyPerSecond *= 2;
+      }
+    }
+    
+    // Update Kuromi display
+    function updateKuromiDisplay() {
+      if (kuromiLevel < kuromiImages.length) {
+        kuromiImg.src = kuromiImages[kuromiLevel];
+      }
+      kuromiLevelDisplay.textContent = `Level ${kuromiLevel}`;
+      
+      if (kuromiLevel < kuromiUpgradeCosts.length) {
+        kuromiUpgradeBtn.textContent = `Upgrade ($${kuromiUpgradeCosts[kuromiLevel].toLocaleString()})`;
+        kuromiUpgradeBtn.disabled = money < kuromiUpgradeCosts[kuromiLevel];
+      } else {
+        kuromiUpgradeBtn.textContent = 'Max Level Reached';
+        kuromiUpgradeBtn.disabled = true;
+      }
+    }
+    
+    // Render all farms
+    function renderFarms() {
+      farmGrid.innerHTML = '';
+      farms.forEach(farm => renderFarm(farm));
+    }
+    
+    // Render a single farm
+    function renderFarm(farm) {
+      const farmType = farmTypes[farm.type];
+      const farmElement = document.createElement('div');
+      farmElement.className = 'farm';
+      farmElement.dataset.id = farm.id;
+      
+      // Add pulsing animation
+      const pulse = document.createElement('div');
+      pulse.className = 'farm-pulse';
+      pulse.style.animationDelay = `${Math.random() * 2}s`;
+      
+      farmElement.innerHTML = `
+        <div class="farm-name">${farmType.name}</div>
+        <div style="font-size: 40px; position: relative; z-index: 2;">${farmType.img}</div>
+        <div class="farm-income">$${farmType.income}/s</div>
+      `;
+      
+      farmElement.appendChild(pulse);
+      farmElement.addEventListener('click', () => selectFarm(farm));
+      farmGrid.appendChild(farmElement);
+      
+      // Add different bounce timing for each farm
+      farmElement.style.animationDuration = `${2 + Math.random() * 3}s`;
+    }
+    
+    // Render buy menu
+    function renderBuyMenu() {
+      buyOptions.innerHTML = '';
+      
+      farmTypes.forEach((farmType, index) => {
+        const option = document.createElement('div');
+        option.className = 'buy-option';
+        
+        const canAfford = money >= farmType.cost;
+        const isFirstFarm = index === 0 || farms.some(f => f.type === index - 1);
+        
+        option.innerHTML = `
+          <div class="buy-option-info">
+            <strong>${farmType.name}</strong>
+            <div style="font-size: 12px;">${farmType.description}</div>
+            <div class="farm-income" style="font-size: 12px;">Income: $${farmType.income}/s</div>
+          </div>
+          <button class="buy-btn" data-type="${index}" ${!canAfford || !isFirstFarm ? 'disabled' : ''}>
+            $${farmType.cost}
+          </button>
+        `;
+        
+        if (!isFirstFarm) {
+          const reqText = document.createElement('div');
+          reqText.className = 'requirements';
+          reqText.textContent = `Requires ${farmTypes[index-1].name} first`;
+          option.querySelector('.buy-option-info').appendChild(reqText);
+        }
+        
+        buyOptions.appendChild(option);
+      });
+    }
+    
+    // Select a farm to show info
+    function selectFarm(farm) {
+      selectedFarm = farm;
+      const farmType = farmTypes[farm.type];
+      
+      selectedFarmName.textContent = farmType.name;
+      selectedFarmIncome.textContent = `Income: $${farmType.income}/s`;
+      
+      // Show upgrade requirements
+      upgradeRequirements.innerHTML = '';
+      if (farmType.nextUpgrade !== null) {
+        const nextType = farmTypes[farmType.nextUpgrade];
+        
+        const reqTitle = document.createElement('p');
+        reqTitle.textContent = `Upgrade to ${nextType.name} ($${nextType.cost}):`;
+        upgradeRequirements.appendChild(reqTitle);
+        
+        if (farmType.upgradeRequirements) {
+          farmType.upgradeRequirements.forEach(req => {
+            const reqType = farmTypes[req.type];
+            const hasEnough = farms.filter(f => f.type === req.type).length >= req.count;
+            
+            const reqElement = document.createElement('div');
+            reqElement.className = `requirement ${hasEnough ? 'met' : 'unmet'}`;
+            reqElement.innerHTML = `
+              <span class="requirement-icon">${reqType.img}</span>
+              ${req.count} ${reqType.name} ${hasEnough ? '✓' : '✗'}
+            `;
+            upgradeRequirements.appendChild(reqElement);
+          });
+        }
+        
+        const canUpgrade = money >= nextType.cost && canUpgradeFarm(farm);
+        upgradeBtn.textContent = `Upgrade to ${nextType.name}`;
+        upgradeBtn.disabled = !canUpgrade;
+      } else {
+        upgradeBtn.textContent = 'Max Level Reached';
+        upgradeBtn.disabled = true;
+      }
+      
+      farmInfo.style.display = 'block';
+      totalFarmsDisplay.textContent = totalFarms;
+      totalIncomeDisplay.textContent = moneyPerSecond;
+    }
+    
+    // Render characters
+    function renderCharacters() {
+      characterGrid.innerHTML = '';
+      
+      // Add title
+      const title = document.createElement('h3');
+      title.textContent = 'Unlocked Characters';
+      title.style.width = '100%';
+      title.style.margin = '5px 0';
+      title.style.textAlign = 'center';
+      characterGrid.appendChild(title);
+      
+      // Add characters
+      characters.forEach(char => {
+        if (char.unlocked) {
+          const charElement = document.createElement('img');
+          charElement.className = 'character';
+          charElement.title = char.name;
+          charElement.src = `${char.img}`;
+          characterGrid.appendChild(charElement);
+        }
+      });
+    }
+    
+    // Render achievements
+    function renderAchievements() {
+      achievementsList.innerHTML = '';
+      
+      achievements.forEach(achievement => {
+        const achievementElement = document.createElement('div');
+        achievementElement.className = `achievement ${achievement.unlocked ? 'unlocked' : 'locked'}`;
+        
+        const icon = document.createElement('div');
+        icon.className = 'achievement-icon';
+        icon.textContent = achievement.img;
+        
+        const info = document.createElement('div');
+        info.className = 'achievement-info';
+        
+        const name = document.createElement('div');
+        name.className = 'achievement-name';
+        name.textContent = achievement.unlocked ? achievement.name : '???';
+        
+        const desc = document.createElement('div');
+        desc.className = 'achievement-desc';
+        desc.textContent = achievement.unlocked ? achievement.desc : 'Locked';
+        
+        info.appendChild(name);
+        info.appendChild(desc);
+        
+        achievementElement.appendChild(icon);
+        achievementElement.appendChild(info);
+        achievementsList.appendChild(achievementElement);
+      });
+    }
+    
+    // Check if any characters should be unlocked
+    function checkCharacterUnlocks() {
+      characters.forEach(char => {
+        if (!char.unlocked && money >= char.cost) {
+          char.unlocked = true;
+          renderCharacters();
+        }
+      });
+    }
+    
+    // Update resource displays
+    function updateResourceDisplays() {
+      moneyDisplay.textContent = Math.floor(money).toLocaleString();
+      mpsDisplay.textContent = moneyPerSecond.toLocaleString();
+      
+      if (selectedFarm) {
+        const farmType = farmTypes[selectedFarm.type];
+        if (farmType.nextUpgrade !== null) {
+          const nextType = farmTypes[farmType.nextUpgrade];
+          const canUpgrade = money >= nextType.cost && canUpgradeFarm(selectedFarm);
+          upgradeBtn.disabled = !canUpgrade;
+        }
+      }
+      
+      // Update buy buttons
+      document.querySelectorAll('.buy-btn').forEach(btn => {
+        const type = parseInt(btn.dataset.type);
+        const farmType = farmTypes[type];
+        const isFirstFarm = type === 0 || farms.some(f => f.type === type - 1);
+        btn.disabled = money < farmType.cost || !isFirstFarm;
+      });
+      
+      // Update Kuromi button
+      if (kuromiLevel < kuromiUpgradeCosts.length) {
+        kuromiUpgradeBtn.disabled = money < kuromiUpgradeCosts[kuromiLevel];
+      }
+      
+      // Update gamble button
+      gambleBtn.disabled = money < 1000;
+    }
+    
+    // Gambling function
+    function gamble() {
+      if (money < 1000) return;
+      
+      money -= 1000;
+      updateResourceDisplays();
+      
+      // 5% chance for rare reward
+      if (Math.random() < 0.05) {
+        const reward = rareRewards[Math.floor(Math.random() * rareRewards.length)];
+        money += reward.value;
+        showTreasureChest(reward.emoji, reward.message);
+        gambleResult.innerHTML = `<span style="color: #FFD700; font-weight: bold;">${reward.message}</span>`;
+      } else {
+        const regularRewards = [10, 25, 50, 100, 250];
+        const reward = regularRewards[Math.floor(Math.random() * regularRewards.length)];
+        money += reward;
+        gambleResult.innerHTML = `<span style="color: #b388ff;">You won $${reward}!</span>`;
+      }
+      
+      updateResourceDisplays();
+    }
+    
+    // Show treasure chest animation
+    function showTreasureChest(emoji, message) {
+      const chest = document.createElement('div');
+      chest.className = 'treasure-chest';
+      chest.textContent = '🎁';
+      document.body.appendChild(chest);
+      
+      setTimeout(() => {
+        chest.remove();
+        
+        const reward = document.createElement('div');
+        reward.className = 'treasure-reward';
+        reward.textContent = emoji;
+        reward.style.color = '#FFD700';
+        document.body.appendChild(reward);
+        
+        setTimeout(() => {
+          reward.remove();
+        }, 2000);
+      }, 1500);
+    }
+    
+    // Save game
+    function saveGame() {
+      const saveData = {
+        money,
+        moneyPerSecond,
+        totalFarms,
+        farms,
+        characters,
+        kuromiLevel,
+        itemsCaught,
+        shinyItemsCaught,
+        achievements
+      };
+      localStorage.setItem('weedTycoonSave', JSON.stringify(saveData));
+    }
+    
+    // Load game
+    function loadGame() {
+      const saveData = JSON.parse(localStorage.getItem('weedTycoonSave'));
+      if (saveData) {
+        money = saveData.money || 0;
+        moneyPerSecond = saveData.moneyPerSecond || 0;
+        totalFarms = saveData.totalFarms || 0;
+        farms = saveData.farms || [];
+        kuromiLevel = saveData.kuromiLevel || 0;
+        itemsCaught = saveData.itemsCaught || 0;
+        shinyItemsCaught = saveData.shinyItemsCaught || 0;
+        achievements = saveData.achievements || [
+          { id: 1, name: "Golden Leaf", desc: "Catch a shiny weed item", unlocked: false, img: "🍂" },
+          { id: 2, name: "Diamond Nug", desc: "Catch 3 shiny items", unlocked: false, img: "💎" },
+          { id: 3, name: "Rainbow Vape", desc: "Catch 10 shiny items", unlocked: false, img: "🌈" },
+          { id: 4, name: "Galaxy Joint", desc: "Catch 25 shiny items", unlocked: false, img: "🌌" },
+          { id: 5, name: "Mystery Mushroom", desc: "Catch 50 shiny items", unlocked: false, img: "🍄" }
         ];
-
-        // Shuffle questions array
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // DOM elements
-        const quizContainer = document.getElementById('quiz-container');
-        const introScreen = document.getElementById('intro-screen');
-        const quizScreen = document.getElementById('quiz-screen');
-        const resultsScreen = document.getElementById('results-screen');
-        const questionElement = document.getElementById('question');
-        const optionsContainer = document.getElementById('options');
-        const questionNumberElement = document.getElementById('question-number');
-        const scoreElement = document.getElementById('score');
-        const resultMessageElement = document.getElementById('result-message');
-        const scoreDisplayElement = document.getElementById('score-display');
-        const celebrationElement = document.getElementById('celebration');
-        const startBtn = document.getElementById('start-btn');
-        const retakeBtn = document.getElementById('retake-btn');
-        const surpriseBtn = document.getElementById('surprise-btn');
-        const videoModal = document.getElementById('video-modal');
-        const closeModal = document.getElementById('close-modal');
-        const youtubeEmbed = document.getElementById('youtube-embed');
-
-        // Quiz state
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let shuffledQuestions = [];
-
-        // Start quiz
-        startBtn.addEventListener('click', () => {
-            shuffledQuestions = shuffleArray([...questions]);
-            currentQuestionIndex = 0;
-            score = 0;
-            introScreen.classList.add('hidden');
-            quizScreen.classList.remove('hidden');
-            showQuestion();
+        characters.forEach(char => {
+          const savedChar = saveData.characters?.find(c => c.name === char.name);
+          if (savedChar) char.unlocked = savedChar.unlocked;
         });
-
-        // Show question
-        function showQuestion() {
-            const currentQuestion = shuffledQuestions[currentQuestionIndex];
-            questionElement.textContent = currentQuestion.question;
-            questionNumberElement.textContent = `Q${currentQuestionIndex + 1}`;
-            scoreElement.textContent = `Score: ${score}/${currentQuestionIndex}`;
-            
-            optionsContainer.innerHTML = '';
-            currentQuestion.options.forEach((option, index) => {
-                const optionElement = document.createElement('button');
-                optionElement.className = 'bg-white p-4 rounded-lg shadow-md text-left font-medium text-gray-800 hover:bg-blue-50 transition-colors';
-                optionElement.textContent = option;
-                optionElement.addEventListener('click', () => selectAnswer(index));
-                optionsContainer.appendChild(optionElement);
-            });
+      }
+    }
+    
+    // Setup event listeners
+    function setupEventListeners() {
+      // Buy farm buttons
+      buyOptions.addEventListener('click', (e) => {
+        if (e.target.classList.contains('buy-btn')) {
+          const type = parseInt(e.target.dataset.type);
+          if (money >= farmTypes[type].cost) {
+            addFarm(type);
+          }
         }
-
-        // Select answer
-        function selectAnswer(selectedIndex) {
-            const currentQuestion = shuffledQuestions[currentQuestionIndex];
-            const optionButtons = optionsContainer.querySelectorAll('button');
-            
-            // Disable all buttons
-            optionButtons.forEach(button => {
-                button.disabled = true;
-            });
-            
-            // Mark correct/incorrect
-            if (selectedIndex === currentQuestion.answer) {
-                optionButtons[selectedIndex].classList.add('correct');
-                score++;
-            } else {
-                optionButtons[selectedIndex].classList.add('incorrect');
-                optionButtons[currentQuestion.answer].classList.add('correct', 'sparkle');
-            }
-            
-            // Update score display
-            scoreElement.textContent = `Score: ${score}/${currentQuestionIndex + 1}`;
-            
-            // Move to next question or show results
-            setTimeout(() => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < shuffledQuestions.length) {
-                    showQuestion();
-                } else {
-                    showResults();
-                }
-            }, 1500);
+      });
+      
+      // Upgrade farm button
+      upgradeBtn.addEventListener('click', () => {
+        if (selectedFarm) {
+          upgradeFarm(selectedFarm);
         }
+      });
+      
+      // Kuromi upgrade button
+      kuromiUpgradeBtn.addEventListener('click', upgradeKuromi);
+      
+      // Buy menu toggle
+      openBuyMenuBtn.addEventListener('click', () => {
+        buyMenu.style.display = 'block';
+        openBuyMenuBtn.style.display = 'none';
+      });
+      
+      closeBuyMenuBtn.addEventListener('click', () => {
+        buyMenu.style.display = 'none';
+        openBuyMenuBtn.style.display = 'block';
+      });
+      
+      // Achievements menu toggle
+      openAchievementsBtn.addEventListener('click', () => {
+        achievementsMenu.style.display = 'block';
+      });
+      
+      closeAchievementsBtn.addEventListener('click', () => {
+        achievementsMenu.style.display = 'none';
+      });
+      
+      // Gambling menu toggle
+      openGambleBtn.addEventListener('click', () => {
+        gambleMenu.style.display = 'block';
+      });
+      
+      closeGambleBtn.addEventListener('click', () => {
+        gambleMenu.style.display = 'none';
+      });
+      
+      // Gambling button
+      gambleBtn.addEventListener('click', gamble);
+      
+      // Player movement
 
-        // Show results
-        function showResults() {
-            quizScreen.classList.add('hidden');
-            resultsScreen.classList.remove('hidden');
-            
-            const percentage = Math.round((score / shuffledQuestions.length) * 100);
-            scoreDisplayElement.textContent = `${score}/${shuffledQuestions.length} (${percentage}%)`;
-            
-            // Result message
-            if (percentage >= 90) {
-                resultMessageElement.textContent = "Excellent! You're ready for your NB driver's test!";
-                triggerFireworks();
-            } else if (percentage >= 80) {
-                resultMessageElement.textContent = "Great job! You're almost there!";
-                triggerConfetti();
-            } else if (percentage >= 70) {
-                resultMessageElement.textContent = "Good effort! Review and try again!";
-                triggerSparkles();
-            } else {
-                resultMessageElement.textContent = "Keep practicing! Review the NB Driver's Handbook and try again.";
-            }
+      let playerX = 50; // Start at 50% position
+player.style.left = `${playerX}%`;
+      document.addEventListener('keydown', (e) => {
+        const minigameArea = document.getElementById('minigame-area');
+        const playerWidth = player.offsetWidth;
+        
+        if (e.key === 'ArrowLeft' || e.key === 'a') {
+          playerX = Math.max(0, playerX - playerSpeed);
+        } else if (e.key === 'ArrowRight' || e.key === 'd') {
+          playerX = Math.min(minigameArea.offsetWidth - playerWidth, playerX + playerSpeed);
         }
-
-        // Celebration effects
-        function triggerSparkles() {
-            celebrationElement.innerHTML = '';
-            celebrationElement.classList.remove('hidden');
-            for (let i = 0; i < 10; i++) {
-                setTimeout(() => {
-                    const sparkle = document.createElement('div');
-                    sparkle.className = 'sparkle';
-                    sparkle.style.left = `${Math.random() * 100}%`;
-                    sparkle.style.top = `${Math.random() * 100}%`;
-                    celebrationElement.appendChild(sparkle);
-                    setTimeout(() => sparkle.remove(), 2000);
-                }, i * 200);
-            }
+        
+        player.style.left = `${playerX}px`;
+        
+        // Keyboard shortcuts for menus
+        if (e.key === 'b') {
+          buyMenu.style.display = 'block';
+          openBuyMenuBtn.style.display = 'none';
         }
-
-        function triggerConfetti() {
-            celebrationElement.classList.remove('hidden');
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
+        if (e.key === 'Escape') {
+          buyMenu.style.display = 'none';
+          openBuyMenuBtn.style.display = 'block';
+          achievementsMenu.style.display = 'none';
+          gambleMenu.style.display = 'none';
         }
-
-        function triggerFireworks() {
-            celebrationElement.classList.remove('hidden');
-            const duration = 15 * 1000;
-            const animationEnd = Date.now() + duration;
-            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-            
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
-            
-            const interval = setInterval(function() {
-                const timeLeft = animationEnd - Date.now();
-                
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-                
-                const particleCount = 50 * (timeLeft / duration);
-                confetti({
-                    ...defaults,
-                    particleCount,
-                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-                });
-                confetti({
-                    ...defaults,
-                    particleCount,
-                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-                });
-            }, 250);
+        if (e.key === 'g') {
+          gambleMenu.style.display = 'block';
         }
-
-        // Retake quiz
-        retakeBtn.addEventListener('click', () => {
-            resultsScreen.classList.add('hidden');
-            celebrationElement.classList.add('hidden');
-            shuffledQuestions = shuffleArray([...questions]);
-            currentQuestionIndex = 0;
-            score = 0;
-            quizScreen.classList.remove('hidden');
-            showQuestion();
-        });
-
-        // Birthday surprise
-        surpriseBtn.addEventListener('click', () => {
-            youtubeEmbed.src = "https://www.youtube.com/embed/v2hWkZsKZSY?autoplay=1";
-            videoModal.classList.remove('hidden');
-        });
-
-        // Close modal
-        closeModal.addEventListener('click', () => {
-            youtubeEmbed.src = "";
-            videoModal.classList.add('hidden');
-        });
-
-        // Close modal when clicking outside
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                youtubeEmbed.src = "";
-                videoModal.classList.add('hidden');
-            }
-        });
-    </script>
+      });
+    }
+    
+    // Start the game
+    init();
+  </script>
 </body>
 </html>
