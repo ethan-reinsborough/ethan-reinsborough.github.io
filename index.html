@@ -58,14 +58,12 @@
     }
     .falling-item {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  z-index: 5;
-  transition: transform 0.1s ease;
-  pointer-events: none; /* This prevents items from blocking clicks */
+  will-change: transform; /* Hint for browser optimization */
+  transition: transform 0.05s linear; /* Smoothest for dynamic movement */
+  pointer-events: none;
+  font-size: 30px;
+  /* Initial position off-screen */
+  transform: translateY(-50px) translateX(var(--pos-x));
 }
     .falling-item.weed {
       background-image: url('https://i.imgur.com/JYQ3q3P.png');
@@ -722,11 +720,12 @@
     let shinyItemsCaught = 0;
     let fallingItems = [];
     let achievements = [
-      { id: 1, name: "Golden Leaf", desc: "Catch a shiny weed item", unlocked: false, img: "🍂" },
-      { id: 2, name: "Diamond Nug", desc: "Catch 3 shiny items", unlocked: false, img: "💎" },
-      { id: 3, name: "Rainbow Vape", desc: "Catch 10 shiny items", unlocked: false, img: "🌈" },
-      { id: 4, name: "Galaxy Joint", desc: "Catch 25 shiny items", unlocked: false, img: "🌌" },
-      { id: 5, name: "Mystery Mushroom", desc: "Catch 50 shiny items", unlocked: false, img: "🍄" }
+      { id: 1, name: "Golden Leaf", desc: "24 Carat Cannabis", unlocked: false, img: "🍂" },
+      { id: 2, name: "Diamond Nug", desc: "Diamonds!", unlocked: false, img: "💎" },
+      { id: 3, name: "Rainbow Vape", desc: "Rare Rainbow Geekbar", unlocked: false, img: "🌈" },
+      { id: 4, name: "Galaxy Joint", desc: "One hit and you'll be in the clouds", unlocked: false, img: "🌌" },
+      { id: 5, name: "Mystery Mushroom", desc: "What does it do?", unlocked: false, img: "🍄" },
+      { id: 6, name: "Fine Shyt", desc: "My girlfriend is too beautiful", unlocked: false, img: "🔥" }
     ];
     
     // Farm types with name, income, cost, and image
@@ -810,7 +809,7 @@
         income: 100, 
         cost: 2500, 
         img: "💎",
-        description: "Mining the earth's treasures",
+        description: "Not the kind of crystal you think",
         upgradeRequirements: [
           { type: 5, count: 2 }, // 2 Shroom Rooms
           { type: 4, count: 2 }  // 2 Dispensaries
@@ -823,7 +822,7 @@
         income: 200, 
         cost: 5000, 
         img: "🏔️",
-        description: "High-altitude premium product",
+        description: "A different kind of snow...",
         upgradeRequirements: [
           { type: 6, count: 1 }, // 1 Crystal Cavern
           { type: 5, count: 3 }  // 3 Shroom Rooms
@@ -832,6 +831,45 @@
       },
       { 
         id: 8, 
+        name: "Walter White's Lab", 
+        income: 500, 
+        cost: 12500, 
+        img: "🧪",
+        description: "We need to cook!",
+        upgradeRequirements: [
+          { type: 7, count: 1 }, // 1 Crystal Cavern
+          { type: 6, count: 3 }  // 3 Shroom Rooms
+        ],
+        nextUpgrade: 9
+      },
+      { 
+        id: 9, 
+        name: "Molly Machine", 
+        income: 1250, 
+        cost: 35000, 
+        img: "🍭",
+        description: "Love is in the air",
+        upgradeRequirements: [
+          { type: 8, count: 1 }, // 1 Crystal Cavern
+          { type: 7, count: 4 }  // 3 Shroom Rooms
+        ],
+        nextUpgrade: 9
+      },
+      { 
+        id: 10, 
+        name: "Fent Furnace", 
+        income: 3000, 
+        cost: 85000, 
+        img: "🏭",
+        description: "A powerful machine for a powerful product",
+        upgradeRequirements: [
+          { type: 8, count: 1 }, // 1 Crystal Cavern
+          { type: 7, count: 4 }  // 3 Shroom Rooms
+        ],
+        nextUpgrade: 9
+      },
+      { 
+        id: 11, 
         name: "Chicken Jockey", 
         income: 6969, 
         cost: 25000, 
@@ -852,15 +890,15 @@
     // Characters (10 total)
     const characters = [
       { name: "Lilly & Ethan", unlocked: true, img: "us.jpg" },
-      { name: "Lady Gaga", cost: 5000, unlocked: false, img: "gaga.jpg" },
-      { name: "Charli XCX", cost: 7500, unlocked: false, img: "charli.png" },
-      { name: "Snoop Dogg", cost: 10000, unlocked: false, img: "steve.png" },
-      { name: "Willie Nelson", cost: 15000, unlocked: false, img: "🎸" },
-      { name: "Seth Rogen", cost: 20000, unlocked: false, img: "🍃" },
-      { name: "Wiz Khalifa", cost: 25000, unlocked: false, img: "🚬" },
-      { name: "Rihanna", cost: 30000, unlocked: false, img: "💄" },
-      { name: "Post Malone", cost: 40000, unlocked: false, img: "🍺" },
-      { name: "Miley Cyrus", cost: 1000, unlocked: false, img: "🌼" }
+      { name: "Lady Gaga", cost: 5000, unlocked: false, img: "lulu.png" },
+      { name: "Charli XCX", cost: 7500, unlocked: false, img: "john.png" },
+      { name: "Steve", cost: 10000, unlocked: false, img: "steve.png" },
+      { name: "Joe", cost: 15000, unlocked: false, img: "joe.png" },
+      { name: "Seth Rogen", cost: 20000, unlocked: false, img: "gaga.jpg" },
+      { name: "Wiz Khalifa", cost: 25000, unlocked: false, img: "art.jpg" },
+      { name: "Rihanna", cost: 30000, unlocked: false, img: "charli.png" },
+      { name: "Post Malone", cost: 40000, unlocked: false, img: "billy.png" },
+      { name: "Miley Cyrus", cost: 50000, unlocked: false, img: "hotpot.png" }
     ];
     
     // Rare rewards for gambling
