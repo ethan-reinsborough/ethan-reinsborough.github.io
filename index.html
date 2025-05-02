@@ -1575,12 +1575,39 @@
         itemsCaught = saveData.itemsCaught || 0;
         shinyItemsCaught = saveData.shinyItemsCaught || 0;
         achievements = saveData.achievements || [
-          { id: 1, name: "Golden Leaf", desc: "Catch a shiny weed item", unlocked: false, img: "🍂" },
-          { id: 2, name: "Diamond Nug", desc: "Catch 3 shiny items", unlocked: false, img: "💎" },
-          { id: 3, name: "Rainbow Vape", desc: "Catch 10 shiny items", unlocked: false, img: "🌈" },
-          { id: 4, name: "Galaxy Joint", desc: "Catch 25 shiny items", unlocked: false, img: "🌌" },
-          { id: 5, name: "Mystery Mushroom", desc: "Catch 50 shiny items", unlocked: false, img: "🍄" }
-        ];
+  // Original shiny-catching achievements
+  { id: 1, name: "Golden Leaf", desc: "Catch a shiny weed item", unlocked: false, img: "🍂" },
+  { id: 2, name: "Diamond Nug", desc: "Catch 3 shiny items", unlocked: false, img: "💎" },
+  { id: 3, name: "Rainbow Vape", desc: "Catch 10 shiny items", unlocked: false, img: "🌈" },
+  { id: 4, name: "Galaxy Joint", desc: "Catch 25 shiny items", unlocked: false, img: "🌌" },
+  { id: 5, name: "Mystery Mushroom", desc: "Catch 50 shiny items", unlocked: false, img: "🍄" },
+  
+  // New weed & vape achievements
+  { id: 6, name: "Puff Puff Pass Out", desc: "You fell asleep mid-sesh", unlocked: false, img: "😴" },
+  { id: 7, name: "Snoop Would Approve", desc: "Smoked enough to impress the Doggfather", unlocked: false, img: "🐶" },
+  { id: 8, name: "Lost in the Sauce", desc: "Forgot what you were doing... again", unlocked: false, img: "🤔" },
+  { id: 9, name: "Geekbar Overlord", desc: "Vaped enough to power a small city", unlocked: false, img: "⚡" },
+  { id: 10, name: "Munchies Master", desc: "Ate an entire pizza... alone", unlocked: false, img: "🍕" },
+  { id: 11, name: "420 Blaze It", desc: "Nice.", unlocked: false, img: "🕒" },
+  { id: 12, name: "Error 404: Brain Not Found", desc: "Too high to function", unlocked: false, img: "🧠💥" },
+  { id: 13, name: "Joint Engineer", desc: "Rolled the perfect blunt", unlocked: false, img: "🏗️" },
+  { id: 14, name: "Fine Shyt", desc: "My girlfriend is too beautiful", unlocked: false, img: "🔥" },
+  
+  // Girlfriend love achievements
+  { id: 15, name: "Heart Eyes", desc: "You looked at her and melted (again)", unlocked: false, img: "😍" },
+  { id: 16, name: "Cuddle Champion", desc: "World record for longest hug", unlocked: false, img: "🫂" },
+  { id: 17, name: "She's Cute, Okay?!", desc: "Admitted it 100+ times today", unlocked: false, img: "🥺" },
+  { id: 18, name: "Simp Level: Expert", desc: "You'd fight a bear for her", unlocked: false, img: "🐻❌" },
+  { id: 19, name: "Stolen Hoodie", desc: "Her hoodie > your hoodie", unlocked: false, img: "👕" },
+  { id: 20, name: "Unlimited Kisses", desc: "No such thing as 'too many'", unlocked: false, img: "💋" },
+  { id: 21, name: "Lovebug", desc: "Can't stop thinking about her", unlocked: false, img: "🐞" },
+  
+  // Bonus achievements
+  { id: 22, name: "Cheesin'", desc: "That smile she gives you? Priceless.", unlocked: false, img: "😁" },
+  { id: 23, name: "Voice Note Addict", desc: "Your phone storage is 90% her voice memos", unlocked: false, img: "📱" },
+  { id: 24, name: "Human Blanket", desc: "You are now her personal space heater", unlocked: false, img: "🛌" },
+  { id: 25, name: "Soulmate Located", desc: "She's the one", unlocked: false, img: "💍" }
+];
         characters.forEach(char => {
           const savedChar = saveData.characters?.find(c => c.name === char.name);
           if (savedChar) char.unlocked = savedChar.unlocked;
