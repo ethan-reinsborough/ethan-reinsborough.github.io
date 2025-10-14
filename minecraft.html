@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linggango Mod Pack | mc.ethanreinsborough.com</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --diamond-blue: #1e88e5;
+            --diamond-blue-dark: #1565c0;
+            --diamond-blue-light: #64b5f6;
+            --diamond-blue-accent: #4fc3f7;
+            --diamond-blue-glow: #29b6f6;
+            --dark: #0a1929;
+            --darker: #061222;
+            --light: #e3f2fd;
+            --gray: #546e7a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(30, 136, 229, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(30, 136, 229, 0.1) 0%, transparent 20%);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--diamond-blue-dark), var(--diamond-blue));
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(30, 136, 229, 0.3);
+            border-bottom: 1px solid rgba(79, 195, 247, 0.3);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            color: var(--diamond-blue-accent);
+            text-shadow: 0 0 10px var(--diamond-blue-glow);
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .logo span {
+            color: var(--diamond-blue-accent);
+            text-shadow: 0 0 8px var(--diamond-blue-glow);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            color: var(--diamond-blue-accent);
+            background: rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 8px var(--diamond-blue-glow);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(10, 25, 41, 0.85), rgba(6, 18, 34, 0.95)), 
+                        url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 8rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 30%, var(--darker) 70%);
+            pointer-events: none;
+        }
+        
+        .hero h2 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+            position: relative;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #e3f2fd;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--diamond-blue), var(--diamond-blue-accent));
+            color: var(--light);
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(30, 136, 229, 0.4);
+            border: 1px solid rgba(79, 195, 247, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(30, 136, 229, 0.6);
+        }
+        
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .server-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .info-card {
+            background: rgba(30, 136, 229, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            min-width: 200px;
+            border: 1px solid rgba(79, 195, 247, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(30, 136, 229, 0.2);
+        }
+        
+        .info-card i {
+            font-size: 2rem;
+            color: var(--diamond-blue-accent);
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px var(--diamond-blue-glow);
+        }
+        
+        /* About Section */
+        .section {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: var(--diamond-blue-accent);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 8px var(--diamond-blue-glow);
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .about-image {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(79, 195, 247, 0.2);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* Mods Section */
+        .mods-section {
+            background-color: rgba(13, 30, 49, 0.8);
+        }
+        
+        .mod-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .category {
+            background: rgba(30, 136, 229, 0.05);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: transform 0.3s, background 0.3s;
+            border: 1px solid rgba(79, 195, 247, 0.1);
+        }
+        
+        .category:hover {
+            transform: translateY(-10px);
+            background: rgba(30, 136, 229, 0.1);
+            box-shadow: 0 10px 25px rgba(30, 136, 229, 0.15);
+        }
+        
+        .category h3 {
+            color: var(--diamond-blue-accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
+        }
+        
+        .mod-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .mod-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .mod-list::-webkit-scrollbar-track {
+            background: rgba(30, 136, 229, 0.1);
+            border-radius: 10px;
+        }
+        
+        .mod-list::-webkit-scrollbar-thumb {
+            background: var(--diamond-blue);
+            border-radius: 10px;
+        }
+        
+        .mod-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .mod-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .mod-list i {
+            color: var(--diamond-blue-light);
+        }
+        
+        /* Settings Section */
+        .settings-section {
+            background-color: rgba(10, 25, 41, 0.9);
+        }
+        
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .setting-card {
+            background: rgba(30, 136, 229, 0.05);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid rgba(79, 195, 247, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .setting-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(30, 136, 229, 0.15);
+        }
+        
+        .setting-card h3 {
+            color: var(--diamond-blue-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .setting-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(79, 195, 247, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .setting-card li:last-child {
+            border-bottom: none;
+        }
+        
+        /* Getting Started Section */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .step {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(30, 136, 229, 0.05);
+            border-radius: 10px;
+            transition: transform 0.3s;
+            border: 1px solid rgba(79, 195, 247, 0.1);
+        }
+        
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(30, 136, 229, 0.15);
+        }
+        
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--diamond-blue), var(--diamond-blue-accent));
+            color: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 4px 10px rgba(30, 136, 229, 0.4);
+        }
+        
+        .step h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            color: var(--diamond-blue-accent);
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, var(--diamond-blue-dark), var(--diamond-blue));
+            padding: 3rem 0 1.5rem;
+            border-top: 1px solid rgba(79, 195, 247, 0.3);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: var(--diamond-blue-accent);
+            bottom: 0;
+            left: 0;
+            box-shadow: 0 0 5px var(--diamond-blue-glow);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #e3f2fd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--diamond-blue-accent);
+            text-shadow: 0 0 5px rgba(79, 195, 247, 0.5);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--light);
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: var(--diamond-blue-accent);
+            color: var(--dark);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.4);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b0bec5;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+            
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .server-info {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-gem"></i>
+                    <h1>Linggango <span>Mod Pack</span></h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#mods">Mods</a></li>
+                        <li><a href="#settings">Settings</a></li>
+                        <li><a href="#get-started">Get Started</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h2>Experience Minecraft Like Never Before</h2>
+            <p>Join our server and explore the incredible Linggango mod pack - a carefully curated collection of 300+ mods that transforms your Minecraft experience.</p>
+            <a href="#get-started" class="cta-button">Get Started Now</a>
+            
+            <div class="server-info">
+                <div class="info-card">
+                    <i class="fas fa-server"></i>
+                    <h3>Server IP</h3>
+                    <p>mc.ethanreinsborough.com</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Active Community</h3>
+                    <p>😎</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-plug"></i>
+                    <h3>Mod Pack</h3>
+                    <p>Linggango v4.5 (most recent hotfix)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Linggango</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>The Linggango mod pack is a carefully curated collection of 300+ mods designed to enhance your Minecraft experience without overwhelming you with complexity. We've selected the best mods that work seamlessly together to create a balanced and enjoyable gameplay.</p>
+                    <p>Our server offers a stable environment with regular updates and an active community. Whether you're a builder, explorer, or redstone engineer, you'll find something to love in the Linggango mod pack.</p>
+                    <p>The pack includes quality-of-life improvements, new dimensions to explore, additional creatures, and enhanced mechanics that will make your Minecraft adventures more exciting than ever before.</p>
+                </div>
+                <div class="about-image">
+                    <img src="DaoI1F5.png" alt="Minecraft modded landscape">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mods Section -->
+    <section class="section mods-section" id="mods">
+        <div class="container">
+            <div class="section-title">
+                <h2>Featured Mods</h2>
+            </div>
+            <div class="mod-categories">
+                <div class="category">
+                    <h3><i class="fas fa-magic"></i> Magic & Enchantment</h3>
+                    <ul class="mod-list">
+                        <li><i class="fas fa-star"></i> Ars Nouveau - Spell creation system</li>
+                        <li><i class="fas fa-star"></i> Irons Spells 'n Spellbooks</li>
+                        <li><i class="fas fa-star"></i> Mana Unification</li>
+                        <li><i class="fas fa-star"></i> Hexalia - Witchcraft magic</li>
+                        <li><i class="fas fa-star"></i> MajoSpell Enchantment</li>
+                        <li><i class="fas fa-check"></i> Goety - Dark magic</li>
+                        <li><i class="fas fa-check"></i> Enigmatic Legacy</li>
+                        <li><i class="fas fa-check"></i> Not Enough Glyphs</li>
+                        <li><i class="fas fa-check"></i> Too Many Glyphs</li>
+                        <li><i class="fas fa-check"></i> Ars Elemental</li>
+                        <li><i class="fas fa-check"></i> Ars Creo</li>
+                        <li><i class="fas fa-check"></i> Ars Additions</li>
+                    </ul>
+                </div>
+                <div class="category">
+                    <h3><i class="fas fa-cogs"></i> Technology & Automation</h3>
+                    <ul class="mod-list">
+                        <li><i class="fas fa-star"></i> Create - Mechanical contraptions</li>
+                        <li><i class="fas fa-star"></i> Applied Energistics 2 - Digital storage</li>
+                        <li><i class="fas fa-star"></i> Mekanism - Advanced machinery</li>
+                        <li><i class="fas fa-star"></i> Industrial Foregoing - Factory automation</li>
+                        <li><i class="fas fa-star"></i> Immersive Engineering</li>
+                        <li><i class="fas fa-check"></i> Create: New Age</li>
+                        <li><i class="fas fa-check"></i> Create: Central Kitchen</li>
+                        <li><i class="fas fa-check"></i> Create: Ultimate Factory</li>
+                        <li><i class="fas fa-check"></i> Create: Hypertube</li>
+                        <li><i class="fas fa-check"></i> Compact Machines</li>
+                        <li><i class="fas fa-check"></i> Sophisticated Storage</li>
+                        <li><i class="fas fa-check"></i> Sophisticated Backpacks</li>
+                    </ul>
+                </div>
+                <div class="category">
+                    <h3><i class="fas fa-leaf"></i> World & Exploration</h3>
+                    <ul class="mod-list">
+                        <li><i class="fas fa-star"></i> Alex's Caves - New cave systems</li>
+                        <li><i class="fas fa-star"></i> Deeper & Darker - Ancient City expansion</li>
+                        <li><i class="fas fa-star"></i> The Undergarden - New dimension</li>
+                        <li><i class="fas fa-star"></i> Incendium - Enhanced Nether</li>
+                        <li><i class="fas fa-star"></i> YUNG's Better Structures</li>
+                        <li><i class="fas fa-check"></i> Dungeons Arise</li>
+                        <li><i class="fas fa-check"></i> Repurposed Structures</li>
+                        <li><i class="fas fa-check"></i> Terramity - World generation</li>
+                        <li><i class="fas fa-check"></i> Gardens of the Dead</li>
+                        <li><i class="fas fa-check"></i> Aquamirae - Ocean exploration</li>
+                        <li><i class="fas fa-check"></i> Unearthed Journey</li>
+                        <li><i class="fas fa-check"></i> Rubinated Nether</li>
+                    </ul>
+                </div>
+                <div class="category">
+                    <h3><i class="fas fa-dragon"></i> Mobs & Creatures</h3>
+                    <ul class="mod-list">
+                        <li><i class="fas fa-star"></i> Mowzie's Mobs - Unique creatures</li>
+                        <li><i class="fas fa-star"></i> Enderman Overhaul</li>
+                        <li><i class="fas fa-star"></i> Creeper Overhaul</li>
+                        <li><i class="fas fa-star"></i> Friends & Foes</li>
+                        <li><i class="fas fa-star"></i> Critters & Companions</li>
+                        <li><i class="fas fa-check"></i> Eeeb's Abyssal Mobs</li>
+                        <li><i class="fas fa-check"></i> Legendary Monsters</li>
+                        <li><i class="fas fa-check"></i> Mutant Monsters</li>
+                        <li><i class="fas fa-check"></i> Born in Chaos</li>
+                        <li><i class="fas fa-check"></i> Bosses Rise</li>
+                        <li><i class="fas fa-check"></i> FDBosses</li>
+                        <li><i class="fas fa-check"></i> Champions</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 3rem;">
+                <p><strong>Full mod list available upon joining the server!</strong> With 300+ mods, there's something for every playstyle.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Settings Section -->
+    <section class="section settings-section" id="settings">
+        <div class="container">
+            <div class="section-title">
+                <h2>Recommended Settings</h2>
+            </div>
+            <div class="settings-grid">
+                <div class="setting-card">
+                    <h3><i class="fas fa-memory"></i> RAM Allocation</h3>
+                    <p>For optimal performance with 300+ mods, we recommend:</p>
+                    <ul>
+                        <li><i class="fas fa-cog"></i> <strong>Minimum:</strong> 6GB allocated RAM</li>
+                        <li><i class="fas fa-cog"></i> <strong>Recommended:</strong> 8GB allocated RAM</li>
+                        <li><i class="fas fa-cog"></i> <strong>Ideal:</strong> 10-12GB allocated RAM</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">To change RAM allocation in CurseForge:</p>
+                    <ol style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Open CurseForge app</li>
+                        <li>Go to Settings → Minecraft</li>
+                        <li>Find "Allocated Memory" slider</li>
+                        <li>Adjust to recommended value</li>
+                    </ol>
+                </div>
+                <div class="setting-card">
+                    <h3><i class="fas fa-map"></i> Mini Map & Waypoints</h3>
+                    <p>Essential navigation tools:</p>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> <strong>Xaero's Minimap:</strong> Press M to open settings</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <strong>Waystones:</strong> Set up fast travel points</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <strong>JourneyMap:</strong> Full-screen mapping (J key)</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">Configure in Controls menu:</p>
+                    <ol style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Esc → Options → Controls</li>
+                        <li>Search for "minimap" or "waypoint"</li>
+                        <li>Set comfortable keybinds</li>
+                    </ol>
+                </div>
+                <div class="setting-card">
+                    <h3><i class="fas fa-palette"></i> Shaders & Performance</h3>
+                    <p>Enhance visuals without sacrificing performance:</p>
+                    <ul>
+                        <li><i class="fas fa-bolt"></i> <strong>Embeddium:</strong> Performance optimization</li>
+                        <li><i class="fas fa-bolt"></i> <strong>Oculus:</strong> Shader support</li>
+                        <li><i class="fas fa-bolt"></i> <strong>ModernFix:</strong> Loading optimizations</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">Recommended shaders:</p>
+                    <ol style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li>Complementary Shaders</li>
+                        <li>BSL Shaders</li>
+                        <li>Sildur's Vibrant Shaders</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Getting Started Section -->
+    <section class="section" id="get-started">
+        <div class="container">
+            <div class="section-title">
+                <h2>How to Get Started</h2>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Install CurseForge</h3>
+                    <p>Download and install the CurseForge app from curseforge.com</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Get the Mod Pack</h3>
+                    <p>Search for "Linggango" in CurseForge or use our direct download link</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Allocate RAM</h3>
+                    <p>Increase allocated memory to 8GB+ in CurseForge settings</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Join Our Server</h3>
+                    <p>Add our server IP: mc.ethanreinsborough.com and start playing!</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://www.curseforge.com/minecraft/modpacks/linggango" class="cta-button" target="_blank">
+                    <i class="fas fa-download"></i> Download on CurseForge
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Linggango Mod Pack</h3>
+                    <p>Experience Minecraft in a whole new way with our carefully curated mod pack. Join our community today!</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#mods">Mods</a></li>
+                        <li><a href="#settings">Settings</a></li>
+                        <li><a href="#get-started">Get Started</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Linggango Mod Pack | Server: mc.ethanreinsborough.com</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
