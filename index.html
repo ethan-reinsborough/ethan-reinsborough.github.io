@@ -7,423 +7,312 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-       
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f5f5f7;
-        }
+
+        body { font-family: 'Inter', sans-serif; background-color: #f5f5f7; }
+
         .navbar {
             backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255,255,255,0.7);
         }
+
+        /* Each row is a flex container — cards are independent, align to top */
+        .card-row {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start; /* KEY: cards don't stretch each other */
+        }
+
         .card {
+            flex: 1;
+            min-width: 0;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255,255,255,0.9);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            cursor: pointer;
         }
+
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
+
         .card-content {
             max-height: 0;
-            margin-top: 0;
             overflow: hidden;
-            transition: all 0.3s ease-out;
+            transition: max-height 0.35s ease, margin-top 0.35s ease;
+            margin-top: 0;
+            color: #4b5563;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
+
         .card.expanded .card-content {
-            max-height: 500px;
+            max-height: 400px;
             margin-top: 1rem;
         }
-        .carousel {
-            scroll-snap-type: x mandatory;
-        }
-        .carousel-item {
-            scroll-snap-align: start;
-        }
+
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
         .animate-fade-in-up {
             animation: fadeInUp 0.6s ease forwards;
             opacity: 0;
         }
+
+        /* Carousel */
+        .carousel-wrap { position: relative; overflow: hidden; width: 100%; }
+        .carousel-track { display: flex; transition: transform 0.35s ease; }
+        .carousel-slide { min-width: 100%; flex-shrink: 0; }
+        .carousel-slide img { width: 100%; height: 16rem; object-fit: cover; border-radius: 0.5rem; display: block; }
+
+        .dots {
+            position: absolute; bottom: 12px; left: 0; right: 0;
+            display: flex; justify-content: center; gap: 6px;
+        }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: white; opacity: 0.5;
+            border: none; cursor: pointer; padding: 0;
+            transition: opacity 0.2s;
+        }
+        .dot.active { opacity: 1; }
+
+        @media (max-width: 640px) {
+            .card-row { flex-direction: column; }
+        }
     </style>
 </head>
 <body class="min-h-screen">
-    <!-- Sticky Navigation -->
+
     <nav class="navbar fixed w-full z-50 px-6 py-4">
         <div class="max-w-6xl mx-auto">
             <h1 class="text-2xl font-semibold text-gray-800">Ethan Reinsborough</h1>
         </div>
     </nav>
 
-    <!-- Banner Area -->
     <div class="pt-24 pb-12 px-6">
         <div class="max-w-6xl mx-auto flex items-center justify-center">
             <img src="/images/profileimage.png" alt="Profile" class="rounded-full w-48 h-48 object-cover">
         </div>
-    </div>  
-
-    <!-- Subheader -->
-    <div class="text-center mb-1">
-        <p class="text-gray-500 text-sm">hover cards to expand. projects available upon request.</p>
     </div>
 
+    <div class="text-center mb-1">
+        <p class="text-gray-500 text-sm">click cards to expand. projects available upon request.</p>
+    </div>
 
-    <!-- Project Grid -->
     <div class="px-6 py-12">
-        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Project Card 1 -->
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/11.jpg" alt="Project 1" class="w-full h-64 object-cover rounded-lg">
+        <div class="max-w-6xl mx-auto" style="display:flex; flex-direction:column; gap:2rem;">
+
+            <div class="card-row">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/11.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/12.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/13.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/12.jpg" alt="Project 1" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/13.jpg" alt="Project 1" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">C# | .NET Core | JavaScript</h3>
+                    <div class="card-content">Developed a comprehensive loan and project management system using C# and .NET Core backend with JavaScript frontend. Features include multiple user portals, automated PDF document generation, email notifications, and real-time loan calculations. Implemented dynamic form validation, interactive dashboards, and secure authentication. The system processes complex financial calculations and generates detailed reports while maintaining a responsive user interface.</div>
                 </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">C# | .NET Core | JavaScript</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    Developed a comprehensive loan and project management system using C# and .NET Core backend with JavaScript frontend. Features include multiple user portals, automated PDF document generation, email notifications, and real-time loan calculations. Implemented dynamic form validation, interactive dashboards, and secure authentication. The system processes complex financial calculations and generates detailed reports while maintaining a responsive user interface.
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/21.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/22.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/23.jpg" alt=""></div>
+                        </div>
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">CMS | Umbraco</h3>
+                    <div class="card-content">Created bilingual solutions using Umbraco CMS with C# backend integration. Implemented custom code and libraries to enable content management across departments. Features include automated image cropping, language dictionaries, and intuitive content editing interfaces. The system allows non-technical staff to easily update website content while maintaining consistency and proper localization.</div>
                 </div>
             </div>
 
-            <!-- Project Card 2 -->
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/21.jpg" alt="Project 2" class="w-full h-64 object-cover rounded-lg">
+            <div class="card-row">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/31.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/32.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/33.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/22.jpg" alt="Project 2" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/23.jpg" alt="Project 2" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">Stable Diffusion</h3>
+                    <div class="card-content">Pursued AI image generation through extensive work with Stable Diffusion, DALL-E, LoRAs and other models. Created custom datasets with thousands of paired images and text captions for model training. Utilized platforms like Automatic1111, OneTrainer, and SwarmUI for model fine-tuning and inference. Implemented specialized training techniques across thousands of epochs to achieve precise, targeted image generation results.</div>
                 </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">CMS | Umbraco</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Created bilingual solutions using Umbraco CMS with C# backend integration. Implemented custom code and libraries to enable content management across departments. Features include automated image cropping, language dictionaries, and intuitive content editing interfaces. The system allows non-technical staff to easily update website content while maintaining consistency and proper localization.</p>
-                </div>
-            </div>
-
-            <!-- Additional Project Cards -->
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/31.jpg" alt="Project 3" class="w-full h-64 object-cover rounded-lg">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/51.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/52.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/53.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/32.jpg" alt="Project 3" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/33.jpg" alt="Project 3" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
-                </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">Stable Diffusion</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Pursued AI image generation through extensive work with Stable Diffusion, DALL-E, LoRAs and other models. Created custom datasets with thousands of paired images and text captions for model training. Utilized platforms like Automatic1111, OneTrainer, and SwarmUI for model fine-tuning and inference. Implemented specialized training techniques across thousands of epochs to achieve precise, targeted image generation results.</p>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">Linux | SSH | Cloud (Oracle/AWS)</h3>
+                    <div class="card-content">Proficient in Linux systems administration through hands-on experience with Oracle Cloud VMs and AWS. Implemented secure SSH configurations, managed firewall rules, and configured port forwarding for various services. Successfully deployed and maintained web applications including this portfolio site through headless installations. Experienced in network security, TCP/UDP port management, and implementing robust ingress rules to ensure system integrity.</div>
                 </div>
             </div>
 
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/51.jpg" alt="Project 4" class="w-full h-64 object-cover rounded-lg">
+            <div class="card-row">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/41.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/42.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/43.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/52.jpg" alt="Project 4" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/53.jpg" alt="Project 4" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">AI | LLM | Hugging Face</h3>
+                    <div class="card-content">Leveraged Hugging Face's transformers library to develop and fine-tune custom language models locally. Implemented BERT, GPT-2, and T5 architectures for various NLP tasks. Created training pipelines using PyTorch and TensorFlow, incorporating techniques like gradient accumulation and mixed precision training. Successfully deployed optimized models for inference on consumer hardware while maintaining reasonable performance and memory usage.</div>
                 </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">Linux | SSH | Cloud (Oracle/AWS)</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Proficient in Linux systems administration through hands-on experience with Oracle Cloud VMs and AWS. Implemented secure SSH configurations, managed firewall rules, and configured port forwarding for various services. Successfully deployed and maintained web applications including this portfolio site through headless installations. Experienced in network security, TCP/UDP port management, and implementing robust ingress rules to ensure system integrity.</p>
-                </div>
-            </div>
-
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/41.jpg" alt="Project 5" class="w-full h-64 object-cover rounded-lg">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/61.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/62.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/63.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/42.jpg" alt="Project 5" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/43.jpg" alt="Project 5" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
-                </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">AI | LLM | Hugging Face</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Leveraged Hugging Face's transformers library to develop and fine-tune custom language models locally. Implemented BERT, GPT-2, and T5 architectures for various NLP tasks. Created training pipelines using PyTorch and TensorFlow, incorporating techniques like gradient accumulation and mixed precision training. Successfully deployed optimized models for inference on consumer hardware while maintaining reasonable performance and memory usage.</p>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">SQL</h3>
+                    <div class="card-content">Extensive experience with SQL and MySQL across multiple projects, implementing complex database architectures and optimizing query performance. Developed robust CRUD operations through REST APIs, application interfaces, and automated scripts. Managed large-scale databases with thousands of records, implementing efficient indexing strategies and query optimization. Proficient in stored procedures, triggers, and maintaining data integrity through proper constraint management.</div>
                 </div>
             </div>
 
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/61.jpg" alt="Project 6" class="w-full h-64 object-cover rounded-lg">
+            <div class="card-row">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/71.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/72.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/73.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/62.jpg" alt="Project 6" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/63.jpg" alt="Project 6" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">Discord | JavaScript/Python</h3>
+                    <div class="card-content">Developed Discord bots using Discord.js and Python, implementing features like command handling, API integration, and automated tasks. Created interactive applications that process user input and communicate with external APIs for data retrieval and manipulation. Implemented robust error handling, rate limiting, and caching mechanisms to ensure optimal performance and reliability.</div>
                 </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">SQL</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Extensive experience with SQL and MySQL across multiple projects, implementing complex database architectures and optimizing query performance. Developed robust CRUD operations through REST APIs, application interfaces, and automated scripts. Managed large-scale databases with thousands of records, implementing efficient indexing strategies and query optimization. Proficient in stored procedures, triggers, and maintaining data integrity through proper constraint management.</p>
-                </div>
-            </div>
-
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/71.jpg" alt="Project 7" class="w-full h-64 object-cover rounded-lg">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/81.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/82.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/83.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/72.jpg" alt="Project 7" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/73.jpg" alt="Project 7" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
-                </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">Discord | JavaScript/Python</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Developed Discord bots using Discord.js and Python, implementing features like command handling, API integration, and automated tasks. Created interactive applications that process user input and communicate with external APIs for data retrieval and manipulation. Implemented robust error handling, rate limiting, and caching mechanisms to ensure optimal performance and reliability.</p>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">PHP</h3>
+                    <div class="card-content">Produced PHP websites integrated with phpMyAdmin databases, focusing on content management systems for multimedia tracking. Created dynamic web forms for show management, implementing features for marking shows as watched/unwatched, sorting capabilities, and personalized watch lists. Utilized MySQL queries for efficient data retrieval and implemented user authentication for secure access to personal show collections.</div>
                 </div>
             </div>
 
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/81.jpg" alt="Project 8" class="w-full h-64 object-cover rounded-lg">
+            <div class="card-row">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/91.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/92.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/93.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/82.jpg" alt="Project 8" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/83.jpg" alt="Project 8" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">Microsoft/Google Suite</h3>
+                    <div class="card-content">Expert-level proficiency in Microsoft Office Suite including advanced Excel formulas, macro development, and Power BI data visualization. Extensive experience with Google Workspace, including Docs, Sheets, and Cloud services. Implemented Google APIs for automation and integration across platforms. Created complex Excel models with pivot tables, VBA scripts, and dynamic dashboards. Utilized Power BI for data analysis and interactive reporting solutions.</div>
                 </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">PHP</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Produced PHP websites integrated with phpMyAdmin databases, focusing on content management systems for multimedia tracking. Created dynamic web forms for show management, implementing features for marking shows as watched/unwatched, sorting capabilities, and personalized watch lists. Utilized MySQL queries for efficient data retrieval and implemented user authentication for secure access to personal show collections.</p>
-                </div>
-            </div>
-
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/91.jpg" alt="Project 9" class="w-full h-64 object-cover rounded-lg">
+                <div class="card">
+                    <div class="carousel-wrap">
+                        <div class="carousel-track">
+                            <div class="carousel-slide"><img src="/images/101.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/102.jpg" alt=""></div>
+                            <div class="carousel-slide"><img src="/images/103.jpg" alt=""></div>
                         </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/92.jpg" alt="Project 9" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/93.jpg" alt="Project 9" class="w-full h-64 object-cover rounded-lg">
+                        <div class="dots">
+                            <button class="dot active"></button>
+                            <button class="dot"></button>
+                            <button class="dot"></button>
                         </div>
                     </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
-                </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">Microsoft/Google Suite</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Expert-level proficiency in Microsoft Office Suite including advanced Excel formulas, macro development, and Power BI data visualization. Extensive experience with Google Workspace, including Docs, Sheets, and Cloud services. Implemented Google APIs for automation and integration across platforms. Created complex Excel models with pivot tables, VBA scripts, and dynamic dashboards. Utilized Power BI for data analysis and interactive reporting solutions.</p>
+                    <h3 class="text-xl font-semibold mt-4 text-gray-800">Agile Development (Jira) | Teams | Github</h3>
+                    <div class="card-content">Experienced in Agile development methodologies, participating in weekly scrums and sprint planning using Jira for task management and progress tracking. Proficient in creating detailed use cases, maintaining task boards, and providing regular status updates. Utilized Microsoft Teams extensively for team communication, meeting coordination, and collaborative work. Demonstrated expertise in Git version control through GitHub, managing repositories, pull requests, and implementing branching strategies for efficient code management.</div>
                 </div>
             </div>
 
-            <div class="card rounded-xl p-4 cursor-pointer">
-                <div class="carousel relative w-full overflow-hidden">
-                    <div class="flex transition-transform duration-300">
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/101.jpg" alt="Project 10" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/102.jpg" alt="Project 10" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                        <div class="carousel-item w-full flex-shrink-0">
-                            <img src="/images/103.jpg" alt="Project 10" class="w-full h-64 object-cover rounded-lg">
-                        </div>
-                    </div>
-                    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                        <button class="w-2 h-2 rounded-full bg-white"></button>
-                        <button class="w-2 h-2 rounded-full bg-white opacity-50"></button>
-                    </div>
-                </div>
-                <h3 class="text-xl font-semibold mt-4 text-gray-800">Agile Development (Jira) | Teams | Github</h3>
-                <div class="card-content mt-4 text-gray-600">
-                    <p>Experienced in Agile development methodologies, participating in weekly scrums and sprint planning using Jira for task management and progress tracking. Proficient in creating detailed use cases, maintaining task boards, and providing regular status updates. Utilized Microsoft Teams extensively for team communication, meeting coordination, and collaborative work. Demonstrated expertise in Git version control through GitHub, managing repositories, pull requests, and implementing branching strategies for efficient code management.</p>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
-        // Card expansion with hover functionality
+        // Card expand — each card independent
         document.querySelectorAll('.card').forEach(card => {
-            const content = card.querySelector('.card-content');
-
-            card.addEventListener('mouseenter', () => {
-                // Find all cards in the same row
-                const cardRect = card.getBoundingClientRect();
-                const sameRowCards = Array.from(document.querySelectorAll('.card')).filter(otherCard => {
-                    const otherRect = otherCard.getBoundingClientRect();
-                    return Math.abs(otherRect.top - cardRect.top) < 10; // Cards within 10px vertical distance are considered in same row
-                });
-
-                // Expand all cards in the same row
-                sameRowCards.forEach(rowCard => {
-                    const rowContent = rowCard.querySelector('.card-content');
-                    rowCard.classList.add('expanded');
-                    rowContent.style.maxHeight = content.scrollHeight + 'px';
-                    rowContent.style.marginTop = '1rem';
-                });
-
-                // Close cards not in the same row
-                document.querySelectorAll('.card').forEach(otherCard => {
-                    if (!sameRowCards.includes(otherCard)) {
-                        const otherContent = otherCard.querySelector('.card-content');
-                        otherCard.classList.remove('expanded');
-                        otherContent.style.maxHeight = '0';
-                        otherContent.style.marginTop = '0';
-                    }
-                });
-            });
-
-            card.addEventListener('mouseleave', () => {
-                setTimeout(() => {
-                    const isAnyCardHovered = Array.from(document.querySelectorAll('.card')).some(c => 
-                        c.matches(':hover')
-                    );
-                    if (!isAnyCardHovered) {
-                        document.querySelectorAll('.card').forEach(c => {
-                            const content = c.querySelector('.card-content');
-                            c.classList.remove('expanded');
-                            content.style.maxHeight = '0';
-                            content.style.marginTop = '0';
-                        });
-                    }
-                }, 100);
+            card.addEventListener('click', function(e) {
+                if (e.target.classList.contains('dot')) return;
+                this.classList.toggle('expanded');
             });
         });
 
-        // Scroll animation
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-fade-in-up');
-                }
-            });
+        // Scroll fade-in
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animate-fade-in-up'); });
         }, { threshold: 0.1 });
+        document.querySelectorAll('.card').forEach(c => observer.observe(c));
 
+        // Carousel
         document.querySelectorAll('.card').forEach(card => {
-            observer.observe(card);
-        });
+            const track = card.querySelector('.carousel-track');
+            const dots  = card.querySelectorAll('.dot');
+            const count = card.querySelectorAll('.carousel-slide').length;
+            let cur = 0;
 
-        // Carousel functionality
-        const carousels = document.querySelectorAll('.carousel');
-        carousels.forEach(carousel => {
-            const items = carousel.querySelectorAll('.carousel-item');
-            const dots = carousel.querySelectorAll('button');
-            let currentSlide = 0;
-
-            function updateCarousel() {
-                const container = carousel.querySelector('.flex');
-                container.style.transform = `translateX(-${currentSlide * 100}%)`;
-                dots.forEach((dot, index) => {
-                    dot.style.opacity = index === currentSlide ? '1' : '0.5';
-                });
+            function goTo(n) {
+                cur = (n + count) % count;
+                track.style.transform = `translateX(-${cur * 100}%)`;
+                dots.forEach((d, i) => d.classList.toggle('active', i === cur));
             }
 
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    currentSlide = index;
-                    updateCarousel();
-                });
-            });
-
-            setInterval(() => {
-                currentSlide = (currentSlide + 1) % items.length;
-                updateCarousel();
-            }, 5000);
+            dots.forEach((dot, i) => dot.addEventListener('click', e => { e.stopPropagation(); goTo(i); }));
+            setInterval(() => goTo(cur + 1), 5000);
         });
     </script>
 </body>
