@@ -62,8 +62,87 @@
     line-height: 1.62;
     -webkit-font-smoothing: antialiased;
   }
+  body.is-locked{
+    overflow: hidden;
+  }
+  body.is-locked .mobile-bar,
+  body.is-locked .layout{
+    display: none !important;
+  }
+  body:not(.is-locked) .auth-screen{
+    display: none;
+  }
   a{color:#7a4a1e; text-underline-offset:3px; text-decoration-thickness:1.5px}
   a:hover{color:#553010}
+
+  .auth-screen{
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+  .auth-card{
+    width: min(100%, 420px);
+    background: linear-gradient(180deg, #fffaee 0%, #fff3d4 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    padding: 30px 28px;
+    box-shadow: var(--shadow-l);
+  }
+  .auth-brand{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .auth-card p{
+    color: var(--ink-soft);
+  }
+  .auth-form{
+    margin-top: 18px;
+    display: grid;
+    gap: 12px;
+  }
+  .auth-label{
+    font-size: .84rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .auth-form input{
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #d9c28b;
+    border-radius: 12px;
+    background: #fffdf6;
+    color: var(--ink);
+    font: inherit;
+  }
+  .auth-form input:focus{
+    outline: 2px solid #e8c878;
+    outline-offset: 2px;
+  }
+  .auth-form button{
+    border: 0;
+    border-radius: 12px;
+    padding: 13px 16px;
+    background: #7a4a1e;
+    color: #fffaee;
+    font-family: "Fredoka", system-ui, sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: var(--shadow-s);
+  }
+  .auth-form button:hover{
+    background: #5f3815;
+  }
+  .auth-error{
+    min-height: 1.4em;
+    margin: 0;
+    color: #9a2b1f;
+    font-size: .92rem;
+  }
 
   h1,h2,h3,h4{
     font-family:"Fredoka", system-ui, sans-serif;
@@ -753,7 +832,27 @@
   }
 </style>
 </head>
-<body>
+<body class="is-locked">
+
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="brand-mark">B</div>
+      <div>
+        <div class="brand-name">Bloxodachi Life</div>
+        <div class="brand-sub">Protected internal page</div>
+      </div>
+    </div>
+    <h1 style="font-size:2rem; margin-bottom:.2em">Enter password</h1>
+    <p>This page is password protected. Enter the shared password to continue.</p>
+    <form class="auth-form" id="auth-form">
+      <label class="auth-label" for="password-input">Password</label>
+      <input id="password-input" name="password" type="password" autocomplete="current-password" />
+      <button type="submit">Unlock page</button>
+      <p class="auth-error" id="auth-error" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
 
 <div class="mobile-bar" role="banner">
   <div class="brand">
@@ -1538,6 +1637,58 @@
 </div>
 
 <script>
+  const authForm = document.getElementById('auth-form');
+  const passwordInput = document.getElementById('password-input');
+  const authError = document.getElementById('auth-error');
+  const protectedNodes = [
+    document.querySelector('.mobile-bar'),
+    document.querySelector('.layout')
+  ].filter(Boolean);
+  const AUTH_PASSWORD_HASH = 'fa6da9bceb6df00c5c6afd724a889d7f5775b9ee09c51ee468b44ecb37896a32';
+  const AUTH_STORAGE_KEY = 'bloxodachi-auth';
+
+  function setLockedState(locked) {
+    document.body.classList.toggle('is-locked', locked);
+    protectedNodes.forEach((node) => {
+      node.setAttribute('aria-hidden', locked ? 'true' : 'false');
+      node.inert = locked;
+    });
+    if (!locked && authError) authError.textContent = '';
+  }
+
+  function unlockPage() {
+    sessionStorage.setItem(AUTH_STORAGE_KEY, 'ok');
+    setLockedState(false);
+  }
+
+  async function hashPassword(value) {
+    const bytes = new TextEncoder().encode(value);
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(digest))
+      .map((byte) => byte.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
+  if (sessionStorage.getItem(AUTH_STORAGE_KEY) === 'ok') {
+    setLockedState(false);
+  } else {
+    setLockedState(true);
+    if (passwordInput) passwordInput.focus();
+  }
+
+  if (authForm && passwordInput) {
+    authForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const submittedHash = await hashPassword(passwordInput.value);
+      if (submittedHash === AUTH_PASSWORD_HASH) {
+        unlockPage();
+        passwordInput.value = '';
+        return;
+      }
+      authError.textContent = 'Incorrect password.';
+      passwordInput.select();
+    });
+  }
   // Mobile menu — toggle a class on the sidebar so the whole panel shows/hides
   const btn = document.getElementById('menu-btn');
   const toc = document.getElementById('toc');
