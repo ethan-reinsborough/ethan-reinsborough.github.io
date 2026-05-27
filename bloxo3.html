@@ -1,0 +1,1588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Bloxodachi Life — Vision Doc</title>
+<template id="__bundler_thumbnail" data-bg-color="#f6ecd2">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f6ecd2"/>
+    <circle cx="600" cy="370" r="160" fill="#ffd984"/>
+    <circle cx="600" cy="370" r="120" fill="#e9a64a"/>
+    <text x="600" y="420" text-anchor="middle" font-family="ui-rounded, system-ui, sans-serif" font-weight="700" font-size="140" fill="#5a3410">B</text>
+    <text x="600" y="610" text-anchor="middle" font-family="ui-rounded, system-ui, sans-serif" font-weight="600" font-size="58" fill="#3b2a17">Bloxodachi Vision</text>
+    <text x="600" y="670" text-anchor="middle" font-family="ui-monospace, monospace" font-size="26" fill="#957f60" letter-spacing="4">UNPACKING · COZY · CHAOS</text>
+  </svg>
+</template>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:        #f6ecd2;
+    --bg-deep:   #ebdfba;
+    --paper:     #fffaee;
+    --paper-2:   #fdf3da;
+    --ink:       #3b2a17;
+    --ink-soft:  #6e5a40;
+    --ink-mute:  #957f60;
+    --line:      #e3d3a8;
+    --line-soft: #efe3c2;
+
+    /* roadmap lane colors */
+    --live:      #6ea05a;
+    --live-bg:   #e6efd2;
+    --flight:    #5b8db8;
+    --flight-bg: #d8e6f1;
+    --next:      #cf8a3a;
+    --next-bg:   #f5e3c2;
+    --north:     #8a6db0;
+    --north-bg:  #e4d9ee;
+
+    --shadow-s: 0 1px 0 rgba(120,90,40,.08), 0 2px 6px rgba(120,90,40,.08);
+    --shadow-m: 0 1px 0 rgba(120,90,40,.10), 0 8px 20px -8px rgba(120,90,40,.20);
+    --shadow-l: 0 2px 0 rgba(120,90,40,.10), 0 18px 40px -16px rgba(120,90,40,.22);
+    --r-s: 10px;
+    --r-m: 16px;
+    --r-l: 22px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(1100px 600px at 12% -10%, #fff4d6 0%, transparent 60%),
+      radial-gradient(900px 700px at 100% 0%, #f4e3b5 0%, transparent 55%),
+      radial-gradient(700px 700px at 50% 110%, #efe0b0 0%, transparent 60%);
+    color: var(--ink);
+    font-family: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16.5px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  a{color:#7a4a1e; text-underline-offset:3px; text-decoration-thickness:1.5px}
+  a:hover{color:#553010}
+
+  h1,h2,h3,h4{
+    font-family:"Fredoka", system-ui, sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    letter-spacing:-0.005em;
+    margin:0 0 .35em;
+    text-wrap: balance;
+  }
+  h1{font-size:2.55rem; line-height:1.05}
+  h2{font-size:1.85rem; line-height:1.1; margin-top:0}
+  h3{font-size:1.25rem}
+  h4{font-size:1.02rem; font-weight:600}
+  p{margin:.5em 0; text-wrap:pretty}
+  ul,ol{padding-left:1.15em}
+  li{margin:.25em 0}
+  strong{color:#2c1d0c}
+  em{color:#5a3a1a}
+  code{
+    font-family:"JetBrains Mono", ui-monospace, monospace;
+    font-size: .88em;
+    background: #f0e2bc;
+    color:#5a3a14;
+    padding: 1px 6px;
+    border-radius: 6px;
+    border: 1px solid #e3d3a8;
+  }
+  blockquote{
+    margin:.6em 0;
+    padding:.6em .95em;
+    background: #fff5d8;
+    border-left: 4px solid #d9b96a;
+    border-radius: 0 12px 12px 0;
+    color:#5b4220;
+    font-style: italic;
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .layout{
+    display:grid;
+    grid-template-columns: 268px minmax(0, 1fr);
+    gap: 0;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+  aside.sidebar{
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    padding: 28px 18px 28px 0;
+    border-right: 1px dashed #d8c594;
+    overflow-y: auto;
+  }
+  aside.sidebar::-webkit-scrollbar{ width:6px }
+  aside.sidebar::-webkit-scrollbar-thumb{ background:#d8c594; border-radius:3px }
+
+  .brand{
+    display:flex; align-items:center; gap:10px;
+    padding: 4px 6px 10px;
+    margin-bottom: 8px;
+  }
+  .brand-mark{
+    width:38px; height:38px; border-radius: 12px;
+    background: linear-gradient(160deg, #ffd984, #e9a64a);
+    box-shadow: inset 0 -3px 0 rgba(120,70,20,.18), var(--shadow-s);
+    display:grid; place-items:center;
+    font-family:"Fredoka"; font-weight:700; color:#5a3410; font-size:18px;
+  }
+  .brand-name{font-family:"Fredoka"; font-weight:700; font-size:1.05rem; line-height:1}
+  .brand-sub{font-size:.78rem; color:var(--ink-mute); margin-top:2px}
+
+  nav.toc{
+    display:flex; flex-direction:column; gap:2px;
+    font-size: .93rem;
+  }
+  nav.toc a{
+    display:flex; align-items:center; gap:9px;
+    padding: 7px 10px;
+    border-radius: 9px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    line-height: 1.25;
+  }
+  nav.toc a:hover{ background: #fff3d4; color: var(--ink) }
+  nav.toc a.active{ background: #fff0c7; color: var(--ink); box-shadow: inset 0 0 0 1px #ecd58a }
+  nav.toc a .num{
+    font-family:"JetBrains Mono"; font-size:.74rem; color:var(--ink-mute);
+    min-width: 22px;
+  }
+  nav.toc .group-label{
+    margin: 14px 10px 4px;
+    font-size: .7rem; letter-spacing:.12em; text-transform:uppercase;
+    color: var(--ink-mute);
+  }
+
+  .toc-foot{
+    margin-top: 22px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: #fff5d8;
+    border: 1px dashed #dcc384;
+    font-size:.8rem;
+    color: var(--ink-soft);
+  }
+
+  /* mobile nav toggle */
+  .mobile-bar{ display:none; }
+
+  main{
+    padding: 28px 0 100px 36px;
+    min-width: 0;
+  }
+
+  section.s{
+    margin: 0 0 56px;
+    scroll-margin-top: 24px;
+  }
+  @media (max-width: 980px){
+    section.s{ scroll-margin-top: 76px; }
+  }
+  .s-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:"JetBrains Mono"; font-size:.72rem;
+    color: #8a6a2b;
+    background:#fff3d4;
+    border:1px solid #e8d18a;
+    padding: 3px 9px; border-radius: 999px;
+    letter-spacing: .08em;
+    margin-bottom: 12px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background: linear-gradient(180deg, #fffaee 0%, #fff3d4 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--r-l);
+    padding: 34px 36px 30px;
+    box-shadow: var(--shadow-l);
+    margin: 8px 0 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:auto -40px -60px auto;
+    width: 260px; height: 260px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #ffe6a3, #f1c46a 60%, transparent 70%);
+    opacity:.55; pointer-events:none;
+  }
+  .hero-eyebrow{
+    font-family:"JetBrains Mono"; font-size:.78rem;
+    color:#8a6a2b; letter-spacing:.14em; text-transform:uppercase;
+  }
+  .hero h1{
+    font-size: 3.1rem; line-height:1; margin:.18em 0 .15em;
+  }
+  .hero .tag{
+    font-size: 1.15rem; color: var(--ink-soft); max-width: 60ch;
+    font-style: italic;
+  }
+  .hero-meta{
+    margin-top: 8px;
+    display:flex; flex-wrap:wrap; gap:10px 16px;
+    font-size:.9rem; color: var(--ink-mute);
+  }
+  .hero-meta b{color:var(--ink-soft)}
+
+  .stat-row{
+    margin-top: 24px;
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    position: relative;
+  }
+  .stat{
+    background: #fffaee;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-s);
+  }
+  .stat .v{
+    font-family:"Fredoka"; font-weight:700; font-size:1.55rem; line-height:1.05;
+    color: var(--ink);
+  }
+  .stat .k{
+    font-size:.78rem; color: var(--ink-mute); text-transform:uppercase;
+    letter-spacing:.08em; margin-top:4px;
+  }
+  .stat.accent{ background: #fff3d4; border-color:#e8d18a }
+  .stat.accent .v{ color:#7a4a1e }
+
+  /* ---------- CARDS / GENERAL ---------- */
+  .card{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-m);
+  }
+  .grid-2{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 880px){
+    .grid-2, .grid-3{ grid-template-columns: 1fr; }
+  }
+
+  /* §1 hero + market gap */
+  .body-copy{ font-size: 1.04rem }
+  .body-copy p:first-child::first-letter{
+    font-family:"Fredoka"; font-weight:700;
+    float:left; font-size: 3.1em; line-height:.85;
+    padding: 6px 10px 0 0; color:#a86518;
+  }
+
+  /* §3 pillars */
+  .pillars{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 1100px){ .pillars{ grid-template-columns: repeat(2, 1fr) } }
+  @media (max-width: 560px){ .pillars{ grid-template-columns: 1fr } }
+  .pillar{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 18px 16px 16px;
+    box-shadow: var(--shadow-s);
+    position: relative;
+  }
+  .pillar .ico{
+    width:54px; height:54px; border-radius:14px;
+    display:grid; place-items:center; font-size: 28px;
+    background: #fff3d4;
+    border:1px solid #e8d18a;
+    margin-bottom: 10px;
+    box-shadow: inset 0 -2px 0 rgba(120,70,20,.08);
+  }
+  .pillar h4{ font-family:"Fredoka"; font-size:1.05rem; margin-bottom:4px }
+  .pillar p{ font-size:.92rem; color: var(--ink-soft); margin:0 }
+  .pillar.p1 .ico{ background:#ffe6c4; border-color:#f0c98a }
+  .pillar.p2 .ico{ background:#ffd9d9; border-color:#eaa6a6 }
+  .pillar.p3 .ico{ background:#dceec5; border-color:#a8c98a }
+  .pillar.p4 .ico{ background:#cfe1f1; border-color:#9bbedd }
+  .pillar.p5 .ico{ background:#e7d8f0; border-color:#bda1d4 }
+
+  /* §4 sacred / flexible */
+  .sf{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 18px;
+  }
+  @media (max-width: 880px){ .sf{ grid-template-columns: 1fr } }
+  .sf-col{
+    border-radius: var(--r-m);
+    padding: 20px 22px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-s);
+  }
+  .sf-col.sacred{ background: #fff0d6; border-color:#ecc888 }
+  .sf-col.flex{   background: #e8f0d6; border-color:#bcd29a }
+  .sf-col h3{ display:flex; align-items:center; gap:9px; margin-top:0 }
+  .sf-col .head-note{ font-size:.85rem; color: var(--ink-soft); margin-bottom: 12px }
+  .tag-list{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px }
+  .tag-list .t{
+    background: #fffaee;
+    border: 1px solid rgba(120,80,30,.18);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: .88rem;
+    color: var(--ink);
+    box-shadow: var(--shadow-s);
+    line-height: 1.25;
+  }
+  .sacred .t{ border-color: #e0b86c }
+  .flex   .t{ border-color: #a8c282 }
+
+  /* §5 table */
+  .ref-table{
+    width:100%; border-collapse: separate; border-spacing:0;
+    background: var(--paper);
+    border:1px solid var(--line); border-radius: var(--r-m);
+    overflow: hidden;
+    box-shadow: var(--shadow-s);
+  }
+  .ref-table th, .ref-table td{
+    text-align:left; padding: 12px 16px;
+    border-bottom: 1px dashed #e3d3a8;
+    font-size: .95rem;
+  }
+  .ref-table th{ background:#fff3d4; font-family:"Fredoka"; font-weight:600 }
+  .ref-table tr:last-child td{ border-bottom: none }
+
+  .insp-grid{
+    display:grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    margin-top: 14px;
+  }
+  @media (max-width: 880px){ .insp-grid{ grid-template-columns: 1fr } }
+  .insp{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-s);
+  }
+  .insp h4{ font-family:"Fredoka"; margin:0 0 4px; font-size: 1rem }
+  .insp p{ font-size:.92rem; color: var(--ink-soft); margin:0 }
+  .insp .from{ font-size:.75rem; color:#a37934; text-transform:uppercase; letter-spacing:.08em }
+
+  /* ---------- §6 ROADMAP SWIMLANE (centerpiece) ---------- */
+  .roadmap{
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 11px, rgba(120,90,40,.04) 11px, rgba(120,90,40,.04) 12px),
+      #fffaee;
+    border:1px solid var(--line);
+    border-radius: var(--r-l);
+    padding: 8px 18px 22px;
+    box-shadow: var(--shadow-l);
+  }
+  .lane{
+    padding: 18px 0 22px;
+    border-top: 1px dashed #d8c594;
+  }
+  .lane:first-of-type{ border-top:none; padding-top: 14px }
+
+  .lane-head{
+    display:flex; align-items:center; gap:14px;
+    margin-bottom: 14px;
+  }
+  .lane-pill{
+    display:inline-flex; align-items:center; gap:10px;
+    padding: 10px 18px 10px 14px;
+    border-radius: 999px;
+    font-family:"Fredoka"; font-weight:700; font-size:1.15rem;
+    box-shadow: var(--shadow-s);
+    color: #2c1d0c;
+    flex: 0 0 auto;
+  }
+  .lane-pill .lp-ico{
+    font-size: 1.25rem; line-height:1;
+    display:inline-block; transform: translateY(-1px);
+  }
+  .lane-pill .lp-count{
+    font-family:"JetBrains Mono"; font-weight:500;
+    font-size: .72rem;
+    background: rgba(255,255,255,.55);
+    border: 1px solid rgba(120,80,30,.18);
+    padding: 2px 7px; border-radius:999px;
+    margin-left: 4px;
+    color: #5a3a14;
+  }
+  .lane-rule{
+    flex:1; height:0;
+    border-top: 2px dotted #d8c594;
+  }
+  .lane-note{ font-size:.85rem; color: var(--ink-soft); flex: 0 0 auto; max-width: 240px; line-height:1.35; font-style: italic }
+
+  .lane.live  .lane-pill{ background: var(--live-bg);   border:1.5px solid #97bd74 }
+  .lane.flight .lane-pill{ background: var(--flight-bg); border:1.5px solid #8fb6d3 }
+  .lane.next  .lane-pill{ background: var(--next-bg);   border:1.5px solid #d7a85f }
+  .lane.north .lane-pill{ background: var(--north-bg);  border:1.5px solid #a98ac7 }
+
+  .feat-row{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+    gap: 12px;
+  }
+  .feat-row.dense{
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .feat{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 14px 13px;
+    box-shadow: var(--shadow-s);
+    position: relative;
+    transition: transform .15s ease, box-shadow .15s ease;
+    display:flex; flex-direction:column;
+  }
+  .feat:hover{ transform: translateY(-2px); box-shadow: var(--shadow-m) }
+
+  .feat .emoji{
+    font-size: 30px; line-height: 1;
+    display:block; margin-bottom: 8px;
+  }
+  .feat .ttl{
+    font-family:"Fredoka"; font-weight:600; font-size:1rem;
+    color: var(--ink); line-height:1.18;
+  }
+  .feat .desc{
+    font-size:.86rem; color: var(--ink-soft); margin-top:6px; line-height:1.4;
+  }
+  .feat .desc.quote{
+    font-style: italic; color:#6b5230;
+  }
+
+  /* lane-tinted feature cards */
+  .lane.live  .feat{ background:#f6fae8; border-color:#cfe0a8 }
+  .lane.flight .feat{ background:#eef4fa; border-color:#bdd3e6 }
+  .lane.next  .feat{ background:#fdf2da; border-color:#e8c878 }
+  .lane.north .feat{ background:#f1e9f6; border-color:#cbb4dd }
+
+  /* Live lane uses compact chip cards — many shipped, low individual weight */
+  .lane.live .feat{
+    flex-direction: row; align-items:center; gap:10px;
+    padding: 10px 12px;
+  }
+  .lane.live .feat .emoji{ font-size:22px; margin: 0 }
+  .lane.live .feat .ttl{ font-size:.92rem; font-family:"Nunito"; font-weight:700; color: var(--ink) }
+
+  /* hero blocks in roadmap (called-out feature categories) */
+  .feat-hero{
+    grid-column: 1 / -1;
+    background: linear-gradient(180deg, #fff5d8, #ffeebb);
+    border: 1.5px solid #e8c878;
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: var(--shadow-m);
+    display:grid;
+    grid-template-columns: auto 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .feat-hero .hero-ico{
+    width: 64px; height: 64px;
+    background: #fffaee;
+    border: 1.5px solid #e8c878;
+    border-radius: 18px;
+    display:grid; place-items:center;
+    font-size: 36px; line-height:1;
+    box-shadow: var(--shadow-s);
+  }
+  .lane.north .feat-hero{
+    background: linear-gradient(180deg, #efe5f6, #e0d2ee);
+    border-color: #c2a8db;
+  }
+  .lane.north .feat-hero .hero-ico{ border-color:#c2a8db }
+  .feat-hero h4{ font-family:"Fredoka"; font-size:1.2rem; margin:0 0 4px; }
+  .feat-hero p{ font-size:.95rem; color:#5a4220; margin:0 }
+  .feat-hero .sub{
+    display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;
+  }
+
+  .feat-hero .sub .chip{
+    background:#fffaee; border:1px solid #e3d3a8; border-radius:999px;
+    padding:4px 10px; font-size:.82rem; color:var(--ink-soft);
+  }
+
+  /* worked-examples after roadmap */
+  .callout{
+    background: #fff5d8;
+    border: 1px solid #e8c878;
+    border-radius: var(--r-m);
+    padding: 18px 22px;
+    margin-top: 18px;
+    box-shadow: var(--shadow-s);
+  }
+  .callout h4{ font-family:"Fredoka"; margin-top:0 }
+
+  /* ---------- §7 CARDS PHASES ---------- */
+  .phases{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    counter-reset: phase;
+  }
+  @media (max-width: 880px){ .phases{ grid-template-columns: 1fr } }
+  .phase{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 18px 18px 16px;
+    box-shadow: var(--shadow-s);
+    position: relative;
+    counter-increment: phase;
+  }
+  .phase::before{
+    content: counter(phase);
+    position:absolute; top:-14px; left:18px;
+    width:32px; height:32px; border-radius:50%;
+    background:#fff3d4; border:2px solid #e8c878;
+    font-family:"Fredoka"; font-weight:700; color:#7a4a1e;
+    display:grid; place-items:center; font-size: 1rem;
+    box-shadow: var(--shadow-s);
+  }
+  .phase .tag-step{
+    font-family:"JetBrains Mono"; font-size:.7rem; color:#a37934;
+    letter-spacing:.1em; text-transform:uppercase; margin-bottom: 4px;
+    display:block;
+  }
+  .phase h4{ font-family:"Fredoka"; font-size:1.05rem; margin: 0 0 6px }
+  .phase ul{ font-size:.92rem; color: var(--ink-soft); margin: 6px 0 0; padding-left: 1.1em }
+
+  /* ---------- §8 monetization columns ---------- */
+  .mon-grid{
+    display:grid; grid-template-columns: 1fr 1fr; gap:18px;
+  }
+  @media (max-width: 880px){ .mon-grid{ grid-template-columns: 1fr } }
+  .mon-list{
+    background: #fff5d8;
+    border: 1px solid #e8c878;
+    border-radius: var(--r-m);
+    padding: 16px 20px;
+  }
+  .mon-list h4{ font-family:"Fredoka"; margin-top:0 }
+  .principles{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 16px 20px;
+    box-shadow: var(--shadow-s);
+  }
+
+  /* ---------- §9 TECH (QUIET, MUTED) ---------- */
+  .tech-wrap{
+    background: #ecdfb8;
+    border: 1px dashed #c8b27a;
+    border-radius: var(--r-m);
+    padding: 22px 24px;
+    color: #4a3c22;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: .92rem;
+    line-height: 1.55;
+  }
+  .tech-wrap h2{
+    font-family:"JetBrains Mono"; font-weight:600;
+    font-size: 1.25rem; color:#3b2a17; letter-spacing:0;
+  }
+  .tech-wrap h3{
+    font-family:"JetBrains Mono"; font-weight:600;
+    font-size: 1rem; color:#4a3c22; margin-top: 20px;
+  }
+  .tech-wrap .for-engineers{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:"JetBrains Mono"; font-size:.72rem;
+    background:#3b2a17; color:#f0e2bc;
+    padding: 4px 10px; border-radius: 4px;
+    letter-spacing:.1em; text-transform:uppercase;
+    margin-bottom: 14px;
+  }
+  .tech-wrap .skip-note{
+    font-family:"Nunito"; font-size:.95rem;
+    color:#6e5a40; font-style: italic;
+    margin: 6px 0 16px;
+  }
+  .tech-wrap code{ background:#dcc98c; border-color:#c5ad6a; color:#3b2a17 }
+  .tech-wrap strong{ color:#2c1d0c }
+  .tech-wrap a{ color:#5a3a14 }
+  .tech-wrap .ttbl{ width:100%; border-collapse: collapse; margin:10px 0 14px; font-size:.85rem }
+  .tech-wrap .ttbl th,.tech-wrap .ttbl td{
+    text-align:left; padding: 8px 10px;
+    border-bottom: 1px dashed #c8b27a;
+    vertical-align: top;
+  }
+  .tech-wrap .ttbl th{ background:#dcc98c; font-weight:600 }
+  .tech-wrap details{
+    background:#e3d3a8; border:1px solid #c8b27a;
+    border-radius: 8px; padding: 10px 14px; margin: 8px 0;
+  }
+  .tech-wrap summary{ cursor:pointer; font-weight:600; color:#3b2a17 }
+  .tech-wrap details[open]{ background:#dcc98c }
+
+  /* ---------- §10 workflow ---------- */
+  .ol-num{ counter-reset: q; list-style:none; padding:0 }
+  .ol-num li{
+    counter-increment: q;
+    display:flex; gap:14px; padding:10px 14px;
+    background: var(--paper); border:1px solid var(--line);
+    border-radius: 12px; margin-bottom:8px;
+    box-shadow: var(--shadow-s);
+  }
+  .ol-num li::before{
+    content: counter(q);
+    flex: 0 0 28px;
+    height: 28px; border-radius:50%;
+    background:#fff3d4; border:1px solid #e8c878;
+    font-family:"Fredoka"; font-weight:700; color:#7a4a1e;
+    display:grid; place-items:center; font-size:.92rem;
+  }
+
+  .voice-card{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    padding: 18px 22px;
+    box-shadow: var(--shadow-s);
+  }
+  .samples{
+    display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;
+  }
+  @media (max-width: 880px){ .samples{ grid-template-columns: 1fr } }
+  .samples blockquote{
+    margin: 0;
+    background: #fff5d8;
+    border-left: 4px solid #e8b85a;
+    border-radius: 0 12px 12px 0;
+    padding: 10px 14px;
+    font-size: .95rem;
+  }
+
+  /* glossary */
+  .gloss{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-m);
+    box-shadow: var(--shadow-s);
+    padding: 6px 4px;
+  }
+  .gloss dl{ margin:0; display:grid; grid-template-columns: 200px 1fr; gap: 6px 14px; padding: 14px }
+  @media (max-width: 700px){ .gloss dl{ grid-template-columns: 1fr } }
+  .gloss dt{
+    font-family:"Fredoka"; font-weight:600;
+    color: var(--ink); padding: 6px 8px;
+    background: #fff5d8; border-radius: 8px;
+    align-self: start;
+  }
+  .gloss dd{ margin: 0; padding: 6px 8px; color: var(--ink-soft); font-size:.95rem }
+
+  /* footer */
+  footer.foot{
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #d8c594;
+    font-size: .85rem; color: var(--ink-mute);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  /* divider doodle */
+  .div-doodle{
+    text-align:center; color:#c4a866; margin: 6px 0 18px;
+    font-family:"JetBrains Mono"; font-size:.85rem; letter-spacing:.5em;
+  }
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width: 980px){
+    .layout{ grid-template-columns: 1fr; padding: 0 18px }
+    aside.sidebar{
+      position: static; height: auto;
+      border-right: none; border-bottom: 1px dashed #d8c594;
+      padding: 12px 0 16px;
+    }
+    .mobile-bar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 14px 18px;
+      background: #fffaee;
+      border-bottom: 1px solid var(--line);
+      position: sticky; top:0; z-index: 20;
+      box-shadow: var(--shadow-s);
+    }
+    .mobile-bar .brand{ padding:0; margin:0 }
+    .mobile-bar button{
+      font-family:"Fredoka"; font-weight:600;
+      background:#fff3d4; border:1px solid #e8d18a;
+      color:#5a3410; padding: 8px 14px; border-radius:10px;
+      cursor:pointer; font-size:.95rem;
+    }
+    nav.toc{ display:none; padding: 0 8px }
+    nav.toc.open{ display:flex }
+    .toc-foot{ display:none }
+    main{ padding: 20px 0 80px }
+    .brand-desktop{ display:none }
+    .hero{ padding: 26px 22px 22px }
+    .hero h1{ font-size: 2.3rem }
+    .lane-head{ flex-wrap: wrap; gap: 10px }
+    .lane-rule{ display:none }
+    .lane-note{ max-width: none; flex: 1 1 100% }
+    .lane.live .feat{ flex-direction: row }
+    .feat-hero{ grid-template-columns: 1fr; text-align: left }
+    .feat-hero .hero-ico{ width:54px; height:54px; font-size:30px }
+
+    /* Mobile sidebar: collapse fully when menu closed, become a dropdown panel when open */
+    aside.sidebar{
+      padding: 0;
+      border-bottom: none;
+    }
+    aside.sidebar:not(.open) .brand-desktop,
+    aside.sidebar:not(.open) nav.toc,
+    aside.sidebar:not(.open) .toc-foot{ display: none !important }
+    aside.sidebar.open{
+      background: #fffaee;
+      border-bottom: 1px dashed #d8c594;
+      padding: 14px 14px 16px;
+      box-shadow: var(--shadow-m);
+    }
+    aside.sidebar.open .brand-desktop{ display: none }
+    aside.sidebar.open nav.toc{ display: flex }
+    aside.sidebar.open .toc-foot{ display: block; margin-top: 14px }
+  }
+</style>
+</head>
+<body>
+
+<div class="mobile-bar" role="banner">
+  <div class="brand">
+    <div class="brand-mark">B</div>
+    <div>
+      <div class="brand-name">Bloxodachi Life</div>
+      <div class="brand-sub">Vision Doc · internal draft</div>
+    </div>
+  </div>
+  <button id="menu-btn" aria-expanded="false" aria-controls="toc">Menu</button>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar" aria-label="Sections">
+    <div class="brand brand-desktop">
+      <div class="brand-mark">B</div>
+      <div>
+        <div class="brand-name">Bloxodachi Life</div>
+        <div class="brand-sub">Vision Doc · v draft</div>
+      </div>
+    </div>
+
+    <nav class="toc" id="toc" aria-label="Table of contents">
+      <div class="group-label">Orientation</div>
+      <a href="#s0"><span class="num">0</span> How to read this</a>
+      <a href="#s1"><span class="num">1</span> What Bloxodachi is</a>
+      <a href="#s2"><span class="num">2</span> Target audience</a>
+
+      <div class="group-label">The North Stars</div>
+      <a href="#s3"><span class="num">3</span> Design pillars</a>
+      <a href="#s4"><span class="num">4</span> Sacred / flexible</a>
+      <a href="#s5"><span class="num">5</span> Positioning &amp; inspirations</a>
+
+      <div class="group-label">The Work</div>
+      <a href="#s6"><span class="num">6</span> The roadmap</a>
+      <a href="#s7"><span class="num">7</span> Bloxodachi Cards</a>
+      <a href="#s8"><span class="num">8</span> Monetization</a>
+
+      <div class="group-label">Inside Baseball</div>
+      <a href="#s9"><span class="num">9</span> Technical architecture</a>
+      <a href="#s10"><span class="num">10</span> How we work</a>
+      <a href="#sA"><span class="num">A</span> Glossary</a>
+    </nav>
+
+    <div class="toc-foot">
+      🕯️ Reading time ~35 min. Sections 1–4 first if you're new.
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-eyebrow">Internal · Team onboarding &amp; long-term design reference</div>
+      <h1>Bloxodachi Life</h1>
+      <p class="tag">A cozy, slightly chaotic god-view life sim on Roblox — an island of Robloxians who live, love, fall over, and occasionally cause hilarious disasters.</p>
+      <div class="hero-meta">
+        <span>📍 <b>Game ID</b> 99981471292876</span>
+        <span>🛠️ Built solo by <b>Ethan Reinsborough</b> (Carmite)</span>
+        <span>🧠 Claude Opus + Codex stack</span>
+      </div>
+
+      <div class="stat-row" aria-label="As of signing day">
+        <div class="stat accent"><div class="v">May&nbsp;9,&nbsp;2026</div><div class="k">Launched</div></div>
+        <div class="stat"><div class="v">7K+</div><div class="k">Peak CCU</div></div>
+        <div class="stat"><div class="v">1.8M+</div><div class="k">Visits</div></div>
+        <div class="stat"><div class="v">99<span style="font-size:.7em">th</span></div><div class="k">D1 / D7 retention pct</div></div>
+        <div class="stat"><div class="v">1M+</div><div class="k">Robux earned</div></div>
+        <div class="stat"><div class="v">3 wks</div><div class="k">Concept → launch</div></div>
+      </div>
+    </header>
+
+    <!-- §0 -->
+    <section class="s" id="s0">
+      <span class="s-tag">§0 · ORIENTATION</span>
+      <h2>How to read this doc</h2>
+      <div class="card">
+        <p>If you are new to the team, read sections <strong>1–4 first</strong> (what the game is, who it's for, what's sacred). Sections 5–8 are the working reference: roadmap, monetization, the Cards feature, and the technical architecture. Section 9 is how we work together day to day.</p>
+        <p>The brand voice in this doc is dialed <em>down</em> from how we talk to players — formal enough to be a reference, but you should still leave understanding what makes Bloxodachi feel like Bloxodachi, not just what it contains.</p>
+        <p><strong>A note on naming:</strong> in code and in anything a player reads, the characters are <strong>always &ldquo;Robloxians.&rdquo;</strong> Never &ldquo;residents,&rdquo; &ldquo;Miis,&rdquo; or &ldquo;NPCs.&rdquo; This doc uses &ldquo;Robloxians&rdquo; the same way. It's a small rule that protects the brand from looking like a Tomodachi clone.</p>
+      </div>
+    </section>
+
+    <!-- §1 -->
+    <section class="s" id="s1">
+      <span class="s-tag">§1 · THE GAME</span>
+      <h2>What Bloxodachi Life is</h2>
+      <div class="card body-copy">
+        <p>A god-view life simulator on Roblox, inspired by <em>Tomodachi Life: Living the Dream</em>. The player is not an avatar in the world — they're an unseen presence above it, watching their island of Robloxians live, talk, eat, dream, form relationships, and grow. You add Robloxians, customize them from the Roblox catalog, give them voices and personalities, then nudge their lives along: feed them, answer their questions, drag two of them together to spark a friendship, watch a friendship turn into a romance and a romance turn into a wedding.</p>
+        <p>It is <strong>cozy</strong> (low-stakes, no fail states, no timers breathing down your neck) and it is <strong>chaotic</strong> (Robloxians get hiccups, fall over, develop crushes you didn't plan, stand unbothered in front of hyper-realistic PNG backgrounds). That tension is the whole point.</p>
+        <p style="color:var(--ink-mute); font-size:.92em">Built solo on a Claude Opus + Codex stack. Organic growth — TikTok virality, word of mouth, and the Roblox algorithm surfacing the game off elite retention. This doc marks the transition from solo development to team-supported scaling.</p>
+      </div>
+
+      <h3 style="margin-top:28px">The market gap it fills</h3>
+      <div class="card">
+        <p>Tomodachi-style life simulation had no major presence on Roblox, despite two proven adjacent genres: avatar-customization games regularly hit 50K–100K+ CCU, and life-sim games (Brookhaven, Adopt Me, Bloxburg) clear 100K+. Bloxodachi sits at the intersection — avatar customization plus life simulation, with <strong>social storytelling as the differentiating layer.</strong> Nobody else is doing the Tomodachi relationship system at scale on the platform.</p>
+      </div>
+    </section>
+
+    <!-- §2 -->
+    <section class="s" id="s2">
+      <span class="s-tag">§2 · WHO IT'S FOR</span>
+      <h2>Target audience</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h4>🎨 Primary</h4>
+          <p>Roblox players roughly <strong>10–18</strong>, with artistic and social interests. They make fanart, care about character expression, live in creative communities, and share content. TikTok has trained them for short loops — but they go <em>deep</em> once a game earns it.</p>
+        </div>
+        <div class="card">
+          <h4>🌱 Secondary</h4>
+          <p>Players <strong>18–30</strong> nostalgic for Tomodachi Life, Animal Crossing, and Chao Garden. Adults who want cozy gameplay with real depth.</p>
+        </div>
+      </div>
+      <div class="callout" style="margin-top:18px">
+        <h4>The read that matters</h4>
+        <p>This audience is not &ldquo;less capable&rdquo; or &ldquo;shorter attention.&rdquo; They are <em>more selective</em> about what earns engagement, and they engage harder than older audiences once hooked.</p>
+        <p style="margin-top:10px"><strong>Design implication:</strong> build deep features with smart onboarding. Shallow features built for an assumed short attention span will underperform. But — and this is the counterweight — a <em>simple</em> feature with a real hook is often a huge win. Pets and the potion shop were both fast to build and both landed hard. Depth and simplicity aren't opposites here; the bar is &ldquo;is there a real hook,&rdquo; not &ldquo;is it complicated.&rdquo;</p>
+      </div>
+    </section>
+
+    <!-- §3 PILLARS -->
+    <section class="s" id="s3">
+      <span class="s-tag">§3 · THE FIVE</span>
+      <h2>Design pillars</h2>
+      <p style="color:var(--ink-soft); margin-bottom:18px">Every feature decision gets evaluated against these five. If a feature doesn't serve at least one, question it.</p>
+      <div class="pillars">
+        <div class="pillar p1">
+          <div class="ico">🌼</div>
+          <h4>Cozy Chaos</h4>
+          <p>Peaceful, low-stakes interaction balanced against absurd emergent moments. The player should feel safe and unhurried while regularly being surprised and delighted.</p>
+        </div>
+        <div class="pillar p2">
+          <div class="ico">💞</div>
+          <h4>Meaningful Relationships Over Competition</h4>
+          <p>The core is social simulation. Players invest in their Robloxians' relationships and stories. The Social Hub adds competition, but the heart is emotional attachment, not winning.</p>
+        </div>
+        <div class="pillar p3">
+          <div class="ico">🧑‍🎨</div>
+          <h4>Customization Through the Roblox Catalog</h4>
+          <p>Players express identity through the full catalog character creator. Robloxians are recognizably Roblox-native — deliberately <em>not</em> the Mii aesthetic.</p>
+        </div>
+        <div class="pillar p4">
+          <div class="ico">📸</div>
+          <h4>Sharable Absurdity</h4>
+          <p>Built for the TikTok era. The Charm Contest, World Tour PNG backgrounds, resident chaos — these manufacture screenshot- and clip-worthy moments. Virality is baked in, not bolted on.</p>
+        </div>
+        <div class="pillar p5">
+          <div class="ico">💝</div>
+          <h4>Voluntary Support, Not Pay-to-Win</h4>
+          <p>Monetization frames spending as supporting the game and unlocking expression — never as buying competitive advantage. (Revisitable for multiplayer specifically, where the math changes.)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- §4 SACRED / FLEXIBLE -->
+    <section class="s" id="s4">
+      <span class="s-tag">§4 · GUARDRAILS</span>
+      <h2>What's sacred · what's flexible</h2>
+      <p style="color:var(--ink-soft); margin-bottom:18px">New contributors should know where they have room to move and where they need to check in first.</p>
+
+      <div class="sf">
+        <div class="sf-col sacred">
+          <h3>🔒 Sacred</h3>
+          <div class="head-note">Don't change without an explicit decision.</div>
+          <div class="tag-list">
+            <span class="t">God-view camera (no character)</span>
+            <span class="t">Roblox catalog customization</span>
+            <span class="t">Brand voice &amp; tone</span>
+            <span class="t">Cozy–chaos balance</span>
+            <span class="t">Voluntary-support monetization</span>
+            <span class="t">Original IP positioning</span>
+            <span class="t">No Nintendo asset mimicry</span>
+          </div>
+          <p style="font-size:.85rem; color:var(--ink-soft); margin-top:14px">God-view may be revisited for silly events / 4th-wall breaks. Gacha-style mechanics are acceptable inside the voluntary-support philosophy.</p>
+        </div>
+        <div class="sf-col flex">
+          <h3>🌿 Flexible</h3>
+          <div class="head-note">Team contribution actively welcomed.</div>
+          <div class="tag-list">
+            <span class="t">Mobile UX &amp; controls</span>
+            <span class="t">Visual polish &amp; UI (→ Stardew)</span>
+            <span class="t">Performance optimization</span>
+            <span class="t">Content velocity</span>
+            <span class="t">Onboarding for Tomodachi-new players</span>
+            <span class="t">Marketing copy execution</span>
+            <span class="t">Mechanics inside the roadmap</span>
+            <span class="t">Backend infrastructure &amp; tooling</span>
+            <span class="t">Community moderation</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- §5 -->
+    <section class="s" id="s5">
+      <span class="s-tag">§5 · POSITIONING</span>
+      <h2>Strategic positioning &amp; inspirations</h2>
+
+      <h3>Reference class</h3>
+      <table class="ref-table" style="margin-bottom:18px">
+        <thead><tr><th>Class</th><th>Examples</th><th>CCU range</th></tr></thead>
+        <tbody>
+          <tr><td>Avatar customization</td><td>Catalog Avatar Creator, Dress to Impress</td><td>50K–100K+</td></tr>
+          <tr><td>Life simulation</td><td>Brookhaven, Adopt Me, Bloxburg</td><td>100K+</td></tr>
+          <tr><td>Cozy (off-platform, aesthetic ref)</td><td>Animal Crossing, Stardew Valley</td><td>—</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <h4>Long-term vision</h4>
+        <p>The definitive life sim on Roblox. Tomodachi Life took Nintendo ~9 years to reach its final depth. Bloxodachi with team support can reach comparable depth in <strong>2–3 years</strong>. This is a multi-year project with a long content runway, not a flash hit to be milked.</p>
+      </div>
+
+      <h3 style="margin-top:24px">Intentional inspirations</h3>
+      <div class="insp-grid">
+        <div class="insp">
+          <div class="from">Nintendo</div>
+          <h4>Tomodachi Life</h4>
+          <p>The core relationship system, personalities, drag-and-drop interactions, cute-chaos energy. Design intent borrowed; assets and branding deliberately not.</p>
+        </div>
+        <div class="insp">
+          <div class="from">Sega · Sonic Adventure 2: Battle</div>
+          <h4>Chao Garden</h4>
+          <p>Direct inspiration for the Social Hub. Invest in a character through normal play, then bring them to compete in mini-games. That loop is what the Social Hub recreates.</p>
+        </div>
+        <div class="insp">
+          <div class="from">Nintendo</div>
+          <h4>Animal Crossing</h4>
+          <p>Cozy aesthetic, animalese-style voices, seasonal/event content, low-stakes daily loops.</p>
+        </div>
+        <div class="insp">
+          <div class="from">ConcernedApe</div>
+          <h4>Stardew Valley</h4>
+          <p>Visual direction (the UI redesign moves this way), respect for player time, generous updates, indie ethos.</p>
+        </div>
+        <div class="insp">
+          <div class="from">Web · Discord</div>
+          <h4>Picrew / Strawpage / card bots</h4>
+          <p>Reference for the Bloxodachi Cards feature (§7): attaching social value to a customizable identity object.</p>
+        </div>
+        <div class="insp">
+          <div class="from">Mojang</div>
+          <h4>Minecraft</h4>
+          <p>The buildable, block-based grid for the Wandering Merchant and housing island.</p>
+        </div>
+      </div>
+
+      <blockquote style="margin-top:18px">On animalese: the current animalese-style voice came partly from voice-engine constraints. A custom dulcet TTS voice engine is a possible future direction depending on where we take audio.</blockquote>
+    </section>
+
+    <!-- §6 ROADMAP -->
+    <section class="s" id="s6">
+      <span class="s-tag">§6 · CENTERPIECE</span>
+      <h2>The roadmap</h2>
+      <p style="color:var(--ink-soft); margin-bottom:18px; max-width:70ch">This is the public roadmap as published to the community. <strong>Preserve the voice and structure when republishing</strong>; develop technical specs separately. Each block is a feature <em>category</em> that still needs spec with the team. The internal phase tracker (<code>docs/PLAN.md</code>) is the source of truth for status.</p>
+
+      <div class="roadmap">
+
+        <!-- LIVE -->
+        <div class="lane live">
+          <div class="lane-head">
+            <span class="lane-pill"><span class="lp-ico">✅</span>Live<span class="lp-count">15 shipped</span></span>
+            <div class="lane-rule"></div>
+            <div class="lane-note">In players' hands. Patch territory, not greenfield.</div>
+          </div>
+          <div class="feat-row dense">
+            <div class="feat"><span class="emoji">🧍</span><span class="ttl">Robloxian creation</span></div>
+            <div class="feat"><span class="emoji">🔊</span><span class="ttl">Animalese voice + chatter</span></div>
+            <div class="feat"><span class="emoji">💭</span><span class="ttl">Mood &amp; stats loop</span></div>
+            <div class="feat"><span class="emoji">💬</span><span class="ttl">Events &amp; bubbles</span></div>
+            <div class="feat"><span class="emoji">🚶</span><span class="ttl">Activity loop</span></div>
+            <div class="feat"><span class="emoji">💖</span><span class="ttl">Relationship ladder (10+ stages)</span></div>
+            <div class="feat"><span class="emoji">🖐️</span><span class="ttl">Drag-and-drop influence</span></div>
+            <div class="feat"><span class="emoji">🐾</span><span class="ttl">Pets</span></div>
+            <div class="feat"><span class="emoji">🧪</span><span class="ttl">Potion line</span></div>
+            <div class="feat"><span class="emoji">🎁</span><span class="ttl">Treasure mystery bags</span></div>
+            <div class="feat"><span class="emoji">🌗</span><span class="ttl">Day / night cycle</span></div>
+            <div class="feat"><span class="emoji">🏆</span><span class="ttl">Leaderboards</span></div>
+            <div class="feat"><span class="emoji">💝</span><span class="ttl">Heart Shop</span></div>
+            <div class="feat"><span class="emoji">🦴</span><span class="ttl">SANS easter-egg event</span></div>
+            <div class="feat"><span class="emoji">📱</span><span class="ttl">Mobile control pass</span></div>
+          </div>
+        </div>
+
+        <!-- IN FLIGHT -->
+        <div class="lane flight">
+          <div class="lane-head">
+            <span class="lane-pill"><span class="lp-ico">🔧</span>In Flight<span class="lp-count">3 active</span></span>
+            <div class="lane-rule"></div>
+            <div class="lane-note">Polish &amp; depth on shipped systems.</div>
+          </div>
+          <div class="feat-row">
+            <div class="feat">
+              <span class="emoji">🔁</span>
+              <span class="ttl">Activity-loop polish</span>
+              <div class="desc">Cadence, variety. Background activities stay <em>flavor</em>, never progression.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🪄</span>
+              <span class="ttl">Deeper relationship influence</span>
+              <div class="desc">More ways for players to <em>earn</em> progression — never an auto-popup.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🛍️</span>
+              <span class="ttl">Potion apply-flow storefront</span>
+              <div class="desc">Cleaner UX from purchase → effect on a chosen Robloxian.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEXT -->
+        <div class="lane next">
+          <div class="lane-head">
+            <span class="lane-pill"><span class="lp-ico">🔜</span>Next<span class="lp-count">forward arc</span></span>
+            <div class="lane-rule"></div>
+            <div class="lane-note">The next major slices.</div>
+          </div>
+          <div class="feat-row">
+
+            <div class="feat-hero">
+              <div class="hero-ico">🏠</div>
+              <div>
+                <h4>Houses + Island Builder</h4>
+                <p>The next major slice. Separate builder place, grid-first mobile editing.</p>
+                <div class="sub">
+                  <span class="chip">separate place</span>
+                  <span class="chip">grid-first</span>
+                  <span class="chip">mobile-priority</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="feat">
+              <span class="emoji">🌟</span>
+              <span class="ttl">The God Realm — Sky Island</span>
+              <div class="desc">A cloud island that grows as you play. Starts bare, grows with you, entirely yours.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🕯️</span>
+              <span class="ttl">The Altar</span>
+              <div class="desc">Daily baking recipe reveals — a check-in hook.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🏛️</span>
+              <span class="ttl">The Museum</span>
+              <div class="desc">Every fish, treasure, and relationship milestone, commemorated.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🏆</span>
+              <span class="ttl">Trophy Hall</span>
+              <div class="desc">Wins, rare finds, founder status. Legacy lives here.</div>
+            </div>
+
+            <div class="feat">
+              <span class="emoji">⚡</span>
+              <span class="ttl">The Social Hub</span>
+              <div class="desc quote">&ldquo;your residents found a router. it fell from the sky. nobody is asking questions. they plugged it in.&rdquo;</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🏃</span>
+              <span class="ttl">Agility Race</span>
+              <div class="desc">Obstacle course. Fastest Robloxian wins.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">💪</span>
+              <span class="ttl">Strength Competition</span>
+              <div class="desc">Tug of war, arm wrestling, general chaos.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">✨</span>
+              <span class="ttl">Charm Contest</span>
+              <div class="desc">Your Robloxian gives a speech. Quality depends on their social stat. Results vary wildly. Screenshots encouraged.</div>
+            </div>
+
+            <div class="feat">
+              <span class="emoji">🎵</span>
+              <span class="ttl">Singing &amp; Concerts</span>
+              <div class="desc">Concerts coming to the island. (3DS Tomodachi fan-favorite.)</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🌍</span>
+              <span class="ttl">World Tour Expansion</span>
+              <div class="desc quote">Robloxians travel the world and stand, completely unbothered, in front of hyper-realistic PNG backgrounds. Keep an eye on the backgrounds — something may be watching.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🎭</span>
+              <span class="ttl">Personalities, expanded</span>
+              <div class="desc">Personality type reflected in posture, idle behavior, unique dialogue lines. Paid personality packs — <em>the Romantic</em>, <em>the Troublemaker</em>, <em>the Wildcard</em>, <em>the Brainrotter</em>.</div>
+            </div>
+
+            <div class="feat">
+              <span class="emoji">📮</span>
+              <span class="ttl">Island Visiting &amp; Town Board</span>
+              <div class="desc">Animal-Crossing-inspired. Residents and players leave notes on your island. <strong>Snapshot-based</strong>, not live visits — flexes to whatever multiplayer looks like at the time.</div>
+            </div>
+
+            <div class="feat">
+              <span class="emoji">🪪</span>
+              <span class="ttl">Bloxodachi Cards MVP</span>
+              <div class="desc">Photo Booth → backend → public profile pages. (See §7.)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NORTH STAR -->
+        <div class="lane north">
+          <div class="lane-head">
+            <span class="lane-pill"><span class="lp-ico">🌟</span>North Star<span class="lp-count">the horizon</span></span>
+            <div class="lane-rule"></div>
+            <div class="lane-note">Where current work is quietly heading.</div>
+          </div>
+          <div class="feat-row">
+
+            <div class="feat-hero">
+              <div class="hero-ico">🎬</div>
+              <div>
+                <h4>Player-authored &ldquo;fanfic&rdquo; scenes</h4>
+                <p>Turn the cutscene engine into a player-facing creation tool. Players stage their own Robloxians in their own scenes — fan-fiction authored inside the engine that already exists.</p>
+                <div class="sub">
+                  <span class="chip">place → pose → line → camera</span>
+                  <span class="chip">save &amp; share</span>
+                  <span class="chip">moderation non-negotiable</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="feat">
+              <span class="emoji">🤖</span>
+              <span class="ttl">Cards Phase 2 — Discord bot</span>
+              <div class="desc">Renders cards in Discord. Collection / trading-style social on the same backend.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🔁</span>
+              <span class="ttl">Cards Phase 3 — feedback loop</span>
+              <div class="desc">Web / Discord actions feed back into the game.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🌐</span>
+              <span class="ttl">Multiplayer / split-island</span>
+              <div class="desc">Deferred, not abandoned. 8-player, spectate-only. Solo loop has to earn it.</div>
+            </div>
+            <div class="feat">
+              <span class="emoji">🗣️</span>
+              <span class="ttl">Custom dulcet TTS voice</span>
+              <div class="desc">Animalese is a placeholder. Direction depends on where we take audio.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6.1 worked example -->
+      <div class="callout" style="margin-top:22px">
+        <h4>§6.1 · How &ldquo;never the only path&rdquo; holds — a worked example</h4>
+        <p>A romance system that also sells a Love Potion invites an obvious worry: does spending quietly become the <em>real</em> path to marriage? It doesn't, and the code is deliberately built to keep it that way.</p>
+        <p><strong>Robloxians fall in love for free.</strong> The <code>CrushSpark</code> event is a thought bubble that fires organically (~3% of special-event rolls, tuned up so it's discoverable) with <strong>no relationship-stage gate</strong> — any mutually-interested pair can spark, even strangers. The player taps <strong>&ldquo;It might be. Go talk to them,&rdquo;</strong> and the romance begins; milestone cutscenes (Beach Run → Stargaze → Proposal → Wedding) carry the pair to marriage.</p>
+        <p><strong>The Love Potion accelerates, it never gates.</strong> It advances an eligible pair one romantic stage and plays that stage's cutscene — a player who never spends still reaches a wedding by playing. That ordering — free path first, paid acceleration second — is the rule every future monetized system should follow.</p>
+      </div>
+
+      <!-- 6.2 / 6.3 quick blocks -->
+      <div class="grid-2" style="margin-top:18px">
+        <div class="card">
+          <h3>§6.2 · Singleplayer-first</h3>
+          <p>The original vision included <strong>multiplayer</strong>: an 8-player split-island scheme with spectate-only access to other islands. We deliberately shipped <strong>singleplayer-first</strong> — not as a permanent constraint, but as sequencing. The core life-sim loop has to be genuinely fun for one player before a shared world is worth the complexity.</p>
+          <p>&ldquo;Singleplayer&rdquo; describes the <em>island sim</em>, not the whole game. Cross-player social is already arriving through the <strong>Social Hub</strong> and <strong>Bloxodachi Cards</strong> (§7).</p>
+        </div>
+        <div class="card" style="background: linear-gradient(180deg, #fff5e8, #fff0d6); border-color:#e8c878">
+          <h3>§6.3 · The north star — fanfic scenes</h3>
+          <p>Why it's the right north star:</p>
+          <ul>
+            <li><strong>It's the in-engine version of what the audience already does</strong> (fanart, fanfic). A scene authoring tool is that impulse made native.</li>
+            <li><strong>It's maximally shareable</strong> — pairs naturally with Cards (§7).</li>
+            <li><strong>The hard infrastructure is already built.</strong> We're maturing an engine, not inventing one.</li>
+          </ul>
+          <p style="font-size:.88em; color:var(--ink-soft); margin-top:10px">Treat as destination, not backlog. Every improvement to poses, camera presets, and the beat runner is an investment in this endgame.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:28px">§6.4 · Success metrics</h3>
+      <div class="grid-3">
+        <div class="card">
+          <div class="s-tag" style="background:#e6efd2; border-color:#b9d199; color:#3f5e2f">Next 90 days</div>
+          <ul>
+            <li>New Player Experience revamp</li>
+            <li>Houses + Island Builder</li>
+            <li>UI redesign</li>
+            <li>Full catalog character creator</li>
+            <li>Relationship depth</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="s-tag" style="background:#d8e6f1; border-color:#a5c4dc; color:#2c5a82">6 months</div>
+          <ul>
+            <li>Top life-sim positioning on Roblox</li>
+            <li>Social Hub launched</li>
+            <li>Cards MVP launched</li>
+            <li>Multi-platform community (Discord, TikTok, web)</li>
+            <li>Sustainable team velocity</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="s-tag" style="background:#e4d9ee; border-color:#bca5d4; color:#5a3b85">12–24 months</div>
+          <ul>
+            <li>Category-defining hit</li>
+            <li>Content depth approaching Tomodachi Life's 9-year arc</li>
+            <li>Discord bot live</li>
+            <li>Brand established beyond the Roblox game itself</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- §7 CARDS -->
+    <section class="s" id="s7">
+      <span class="s-tag">§7 · FLAGSHIP FEATURE · pre-build</span>
+      <h2>Bloxodachi Cards / Pages</h2>
+      <p style="color:var(--ink-soft); max-width:70ch">The &ldquo;turn attachment into portable identity&rdquo; feature. A player takes a Robloxian they love, generates a card for them in-game, and that card becomes a public, shareable object — a profile page on the web, a card a Discord bot can render, a thing you post.</p>
+
+      <div class="callout" style="margin-top:14px">
+        <h4>Why it fits the pillars</h4>
+        <ul style="margin-bottom:0">
+          <li><strong>Sharable Absurdity:</strong> a card is the most natively-shareable artifact the game can produce.</li>
+          <li><strong>Meaningful Relationships:</strong> emotional attachment extends past the session — your Robloxian exists <em>outside</em> the game now.</li>
+          <li><strong>Customization:</strong> another expression surface; pulls identity value out of catalog work the player already did.</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top:28px">Phased build</h3>
+      <div class="phases" style="margin-top:22px">
+        <div class="phase">
+          <span class="tag-step">MVP</span>
+          <h4>📸 Photo Booth + backend + pages</h4>
+          <ul>
+            <li>In-game <strong>Photo Booth</strong> — pick, pose, frame, generate.</li>
+            <li>Reuses god-view camera + ViewportFrame portrait infra.</li>
+            <li>Backend storage keyed to player + Robloxian (external service from the start).</li>
+            <li>Public profile pages — shareable by link, screenshot-friendly.</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <span class="tag-step">Phase 2</span>
+          <h4>🤖 Discord bot integration</h4>
+          <ul>
+            <li>Bot renders cards in Discord.</li>
+            <li>Supports collection / trading-style social mechanics.</li>
+            <li>Reads from the same backend the web pages do.</li>
+          </ul>
+        </div>
+        <div class="phase">
+          <span class="tag-step">Phase 3</span>
+          <h4>🔁 Game ↔ web ↔ game feedback loop</h4>
+          <ul>
+            <li>Web / Discord actions feed back into the game.</li>
+            <li>Candidates: redeemables, web-side customization that appears in-game, social signals surfaced on the island.</li>
+            <li>Exact mechanics TBD.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:22px">
+        <div class="card">
+          <h3>§7.4 · Monetization hooks <span style="font-size:.7em; color:var(--ink-mute); font-weight:normal">— later, not MVP</span></h3>
+          <p>Per the &ldquo;follow attachment, not precede it&rdquo; rule (§8): ship the loop free first, prove players make and share cards, <em>then</em> layer premium.</p>
+          <div class="tag-list">
+            <span class="t">Seasonal / event card frames</span>
+            <span class="t">Premium card effects</span>
+            <span class="t">Rare backgrounds</span>
+            <span class="t">Discord bot cosmetics</span>
+          </div>
+        </div>
+        <div class="card" style="background:#fff5d8; border-color:#e8c878">
+          <h3>§7.5 · Open questions for the team</h3>
+          <ul>
+            <li>Where does the card backend live, and how does it authenticate against Roblox identity?</li>
+            <li><strong>Moderation</strong> — cards are user-generated and public-facing. All card text must pass moderation before leaving the game; the web layer needs its own gate too.</li>
+            <li>How much of the card is auto-generated from the Robloxian vs. player-decorated?</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- §8 MONETIZATION -->
+    <section class="s" id="s8">
+      <span class="s-tag">§8 · PHILOSOPHY</span>
+      <h2>Monetization philosophy</h2>
+      <div class="callout">
+        <h4>The rule</h4>
+        <p style="font-size:1.05rem"><strong>Monetization follows attachment. It never precedes it.</strong> Build the engagement loop, prove players want in, <em>then</em> introduce optional premium layers. This is not a moral position alone — it's what the data has rewarded.</p>
+      </div>
+
+      <div class="mon-grid" style="margin-top:18px">
+        <div class="mon-list">
+          <h4>✅ What's working</h4>
+          <ul>
+            <li><strong>Founders Pass</strong> — recognition-based; players supporting the game's success.</li>
+            <li><strong>Potions / items</strong> — functional but optional; enhance expression, never gate progression.</li>
+            <li><strong>Milestone promo codes</strong> — build goodwill, reward the engaged community.</li>
+          </ul>
+        </div>
+        <div class="principles">
+          <h4>Principles</h4>
+          <ul>
+            <li>Never gate core gameplay behind a paywall.</li>
+            <li>Limited-time items create urgency without forcing an immediate buy.</li>
+            <li><strong>Don't fake urgency.</strong> A permanent Game Pass should not wear a &ldquo;LIMITED TIME&rdquo; badge — we removed one for exactly this reason.</li>
+            <li>Premium items should feel like collectibles or status symbols, not power upgrades.</li>
+            <li>Discounted &ldquo;founders&rdquo; / &ldquo;milestone&rdquo; packs at significant moments work well.</li>
+            <li>Free rewards for everyone, alongside premium options, maintains goodwill.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:18px">
+        <h4>A worked example in code</h4>
+        <p>When every Robloxian slot is full, the game shows a soft &ldquo;Island full — tap to make more room&rdquo; nudge that opens the Heart Shop, hidden for players who already own the More Friends Pass. The instinct in a lesser game would be to <em>nerf progression</em> to manufacture that pressure — which would punish the most engaged players, who are exactly the monetization funnel. Instead we convert the <em>natural</em> friction point and leave progression generous.</p>
+        <p style="margin-top:8px"><strong>That's the philosophy made concrete:</strong> pressure comes from real ceilings, never from artificial pain.</p>
+      </div>
+
+      <p style="color:var(--ink-mute); font-size:.92rem; margin-top:14px"><em>Future opportunities (not now):</em> seasonal card frames (§7.4), premium card effects, earnable + premium housing decoration, limited Wandering Merchant exclusives, Discord bot cosmetics.</p>
+    </section>
+
+    <!-- §9 TECH — MUTED FOR ENGINEERS -->
+    <section class="s" id="s9">
+      <div class="tech-wrap">
+        <span class="for-engineers">⚙️ For engineers · safe to skip</span>
+        <h2 style="margin-top:6px">§9 — Technical architecture overview</h2>
+        <p class="skip-note">Non-tech readers: this section is the orientation layer for engineers — system shape, code paths, and the gotchas that have actually bitten us. You can skip it without missing any product context.</p>
+
+        <p>Full detail lives in the codebase, <code>docs/SYSTEM_MAP.md</code>, and <code>docs/COLLAB.md</code>. New engineers: read SYSTEM_MAP and COLLAB before touching the relationship, stats, or cutscene systems — they have hard-won invariants that are easy to violate.</p>
+
+        <h3>9.1 — Shape of the project</h3>
+        <ul>
+          <li><strong>Roblox + Rojo.</strong> Code lives in this repo and syncs into Studio. <code>*.server.lua</code> → <code>Script</code>, <code>*.client.lua</code> → <code>LocalScript</code>, plain <code>*.lua</code> → <code>ModuleScript</code>. Tabs for indentation.</li>
+          <li><strong>Service properties belong in <code>default.project.json</code> <code>$properties</code>, not scripts.</strong> Setting <code>Workspace.StreamingEnabled</code> or <code>Lighting.Technology</code> from a script throws a capability error and halts the script. Single most common environment trap.</li>
+        </ul>
+
+        <table class="ttbl">
+          <thead><tr><th>Area</th><th>Path</th><th>Holds</th></tr></thead>
+          <tbody>
+            <tr><td>Shared modules</td><td><code>src/ReplicatedStorage/Shared/</code></td><td><code>GameConfig</code>, <code>Relationships</code>, <code>Personalities</code>, <code>Activities</code>, <code>RobloxianEvents</code>, <code>Items</code>, <code>Treasure</code>, <code>Potions</code>, <code>Pets</code>, <code>BloxodachiDialogue</code>, <code>CutsceneEngine</code>, <code>ScriptedPoses</code>, <code>DulcetVoice</code>…</td></tr>
+            <tr><td>Server</td><td><code>src/ServerScriptService/</code></td><td>Authority. <code>Bootstrap</code>, <code>Services/*</code>, behavior scripts (<code>RobloxianIdle</code>/<code>Inspect</code>/<code>Drag</code>/<code>Gifting</code>), <code>Cutscenes/*</code> scene definitions.</td></tr>
+            <tr><td>Client</td><td><code>src/StarterPlayer/StarterPlayerScripts/</code></td><td>All UI and presentation: Camera, MobileJoystick, HUD, inspect/creation UIs, RelationshipUI, CutsceneClient, speech, lighting tweens, shop UIs.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>9.2 — The architectural spine</h3>
+        <details open>
+          <summary>God-view, no character</summary>
+          <p><code>Players.CharacterAutoLoads = false</code>. Camera in <code>Camera.client.lua</code> is fully scriptable: angled top-down, WASD/edge pan, scroll zoom, RMB rotate, clamped to the island. Because there is no character, the mobile joystick is <strong>custom</strong> — Roblox's native DynamicThumbstick is character-control UI and won't render reliably here. <em>(Player-tested decision: joystick is deliberately the default; earlier swipe-to-pan primary was found &ldquo;way too hard.&rdquo; Fix bugs; don't re-propose swipe-primary.)</em></p>
+        </details>
+        <details>
+          <summary>The world rebuilds on every server start</summary>
+          <p><code>IslandWorld.Build()</code> destroys and recreates <code>Workspace.BloxodachiIsland</code>. Do not add persistence to the world folder. Island can be generated or authored (<code>MainIsland</code> / <code>SakuraIsland</code>); authored islands are detected and preserved, system reads <code>EventMarker…</code> parts for activity locations.</p>
+        </details>
+        <details>
+          <summary>Server is the only writer of state</summary>
+          <p>Every Robloxian's stats live in <code>profile.RuntimeState</code> server-side. Clients render from remote payloads and never mutate authoritative state. <strong>Critical invariant:</strong> if a remote claims to own multiple slices of state, it must populate <em>all</em> of them — or send a deliberately partial payload that the client's nil-guards skip. A stale full snapshot wipes freshly-displayed values.</p>
+        </details>
+        <details>
+          <summary>Persistence is centralized in <code>SessionPersistenceService</code></summary>
+          <p>Robloxian profiles, player inventory, purchases, Word Bank, island level/progress, unlock claims all export/import through it. Shops don't persist stock (deterministic from UTC day index). Studio runs with persistence off (writes to <code>_Studio</code> suffix); live servers always persist.</p>
+        </details>
+
+        <h3>9.3 — Key gameplay systems (one line each)</h3>
+        <ul>
+          <li><strong>Robloxians</strong> — forced R15 for reliable catalog animation; intentionally oversized (~1.75×). Appearance mixes <code>HumanoidDescription</code> fields with a generated face-feature <code>SurfaceGui</code>.</li>
+          <li><strong>Voice</strong> — animalese-style letter chirps (<code>DulcetVoice</code>); all speech flows through one <code>RobloxianSpoke</code> event.</li>
+          <li><strong>Stats &amp; mood</strong> — Hunger drains slowly. <strong>Happiness is the visible level meter</strong> — no separate EXP. Raising Happiness grants equal Coins through the single <code>AwardHappiness</code> path.</li>
+          <li><strong>Activities</strong> — weighted scheduler; solo + multi-actor. <strong>Background activities are flavor only — they never award relationship points.</strong></li>
+          <li><strong>Relationships</strong> — 10+ stage ladder in <code>Relationships.lua</code>, data-only so stages insert cleanly. <strong>Progression is player-engaged only.</strong></li>
+          <li><strong>Events / bubbles</strong> — head bubbles are &ldquo;something's on my mind&rdquo; indicators; engagement happens via normal click flow.</li>
+          <li><strong>Cutscenes</strong> — data-driven beat runner (<code>CutsceneEngine</code> + <code>Cutscenes/*</code>). <strong>Animations run client-side</strong> (server <code>LoadAnimation</code> doesn't replicate reliably for non-character models); rig-stability fix is anchoring only the <code>HumanoidRootPart</code>.</li>
+          <li><strong>Monetization plumbing</strong> — <code>GameConfig.Monetization.Products</code>, <code>MarketplaceReceipts</code> for <code>ProcessReceipt</code> (saves before acknowledging), Heart Shop, &ldquo;Coming Soon&rdquo; disabled state for any product whose dashboard ID isn't pasted yet.</li>
+        </ul>
+
+        <h3>9.4 — Things that will bite you</h3>
+        <details>
+          <summary>Don't chase Robloxian head-lag / walking choppiness for V1</summary>
+          <p>Deeply investigated. Root cause is live-humanoid CFrame replication with no client interpolation, plus catalog-heavy avatars. SLIM/streaming was tested and made it <em>worse</em>; RenderFidelity is plugin-locked. Shipped mitigation is camera-aware visual LOD. Real fix is client-side animation/interpolation — a project, not a patch.</p>
+        </details>
+        <details>
+          <summary>Don't tween lighting server-side</summary>
+          <p>Clients won't see smooth interpolation. Day/night is split: <code>DayNightService</code> owns <code>Lighting.ClockTime</code>, <code>DayNightLighting.client.lua</code> owns all visual tweens. God-view makes <code>OutdoorAmbient</code> and <code>ExposureCompensation</code> matter more than usual.</p>
+        </details>
+        <details>
+          <summary>User text must pass <code>TextModerationService</code></summary>
+          <p>Before it's saved or shown to another player. Applies to Robloxian names, Word Bank entries, and anything new that's player-authored (island names, captions, card text).</p>
+        </details>
+        <details>
+          <summary>The Clothes Shop is being retired</summary>
+          <p>Being repurposed (likely as the Potion Stand). Don't wire new monetization to <code>VipClothingService</code> / <code>Items.VipCatalog</code>. Codex currently owns the creator rework (<code>RobloxianCreation.*</code>) — coordinate before touching it.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- §10 -->
+    <section class="s" id="s10">
+      <span class="s-tag">§10 · WORKFLOW</span>
+      <h2>How we work</h2>
+      <p style="color:var(--ink-soft); max-width:70ch">How to work effectively with the founder and alongside the AI dev stack.</p>
+
+      <h3 style="margin-top:22px">§10.1 · Decision-making operating system</h3>
+      <p>The founder's system that built this game: <strong>Trend Recognition + Execution Speed + Iteration Off Analytics.</strong> Run decisions through five questions:</p>
+      <ol class="ol-num">
+        <li><div><strong>What is the data telling us?</strong> Retention, CCU, monetization, ratings.</div></li>
+        <li><div><strong>What is the community asking for?</strong> Discord, in-game behavior.</div></li>
+        <li><div><strong>Does this serve the design pillars?</strong> (See §3.)</div></li>
+        <li><div><strong>Can we ship a meaningful version <em>quickly</em>?</strong></div></li>
+        <li><div><strong>Does this open new content runway, or close it?</strong></div></li>
+      </ol>
+      <div class="callout">
+        <p><strong>When in doubt: ship fast and iterate.</strong> The Bloxodachi advantage is execution velocity, not first-pass polish. Polish comes from iterating on real player response.</p>
+        <p style="margin-top:6px"><strong>Resist:</strong> scope creep · perfection-before-shipping · ignoring data because the team has opinions · building for hypothetical players instead of actual ones.</p>
+      </div>
+
+      <h3 style="margin-top:22px">§10.2 · Decision authority &amp; creative direction flow</h3>
+      <div class="card">
+        <ul>
+          <li><strong>Creative direction and the &ldquo;sacred&rdquo; list (§4) flow from the founder.</strong> When in doubt about anything sacred, ask before building.</li>
+          <li><strong>Within the flexible list, contributors have real latitude</strong> — bring a working slice, not a proposal deck.</li>
+          <li><strong>New features that aren't on the plan get checked in first.</strong> If you think something belongs on the roadmap, add it to <code>docs/PLAN.md</code> and flag it — don't silently build it.</li>
+          <li><strong>The founder favors lean process.</strong> Name the cost of overhead up front; default to the lightest workflow that works. Heavy collaboration ceremony is friction, not safety.</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top:22px">§10.3 · Brand voice guardrails</h3>
+      <div class="voice-card">
+        <p>The voice is a real brand asset. All player-facing text — in-game strings, announcements, marketing, social, descriptions — follows it.</p>
+        <p style="margin-top:8px"><strong>Tonal principles:</strong> slightly chaotic but never mean · affectionate sarcasm <em>toward Robloxians, never toward players</em> · self-aware about absurdity without explaining it · warm and inclusive without being saccharine.</p>
+        <p style="margin-top:8px"><strong>Hard rules:</strong> never explain a joke · never apologize for absurdity · reference established lore as community in-jokes (the missing llamas, the router from the sky, the unbothered Robloxians in front of PNG backgrounds) · lowercase is fine in casual social contexts.</p>
+
+        <h4 style="margin-top:14px">Calibration samples</h4>
+        <div class="samples">
+          <blockquote>your island is about to be a full soap opera and i will not be apologizing</blockquote>
+          <blockquote>his llamas are nearby but unaccounted for. he does not accept emeralds</blockquote>
+          <blockquote>sometimes a beehive falls out. this is not your problem. it is very much your nearest resident's problem</blockquote>
+          <blockquote>your residents found a router. it fell from the sky. nobody is asking questions</blockquote>
+        </div>
+
+        <p style="margin-top:14px; font-size:.92em; color:var(--ink-soft)"><strong>Note:</strong> in <em>community</em> copy the characters are often called &ldquo;residents&rdquo; for vibe; in <em>game UI and code</em> they are always &ldquo;Robloxians.&rdquo; Keep that line.</p>
+      </div>
+
+      <h3 style="margin-top:22px">§10.4 · Working in the codebase <span style="font-size:.65em; color:var(--ink-mute); font-weight:normal">— for engineers / AI agents</span></h3>
+      <div class="card" style="background:#ecdfb8; border-color:#c8b27a; font-family:'JetBrains Mono'; font-size:.92rem; line-height:1.55">
+        <ul>
+          <li>Read <code>AGENTS.md</code>, <code>docs/PLAN.md</code>, <code>docs/COLLAB.md</code>, and recent <code>git log</code> before starting.</li>
+          <li><strong>Git is the change history.</strong> COLLAB.md is reserved for non-obvious gotchas and sticky decisions only.</li>
+          <li><strong>Land working slices.</strong> If you stop mid-feature, commit what works.</li>
+          <li><strong>No speculative abstractions, no backwards-compat shims.</strong> Greenfield — delete unused code, don't comment it out.</li>
+          <li>Multi-agent repo (Claude + Codex). Check live working sets before editing a file another agent owns.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="s" id="sA">
+      <span class="s-tag">APPENDIX</span>
+      <h2>Glossary</h2>
+      <div class="gloss">
+        <dl>
+          <dt>Robloxian</dt><dd>An NPC character. The only acceptable name in code and player-facing text.</dd>
+          <dt>God-view</dt><dd>The top-down observer camera; the player has no avatar.</dd>
+          <dt>Happiness</dt><dd>The visible level-progress meter; doubles as the Coin reward signal. There is no separate EXP.</dd>
+          <dt>Heart Shop</dt><dd>The permanent-bundle storefront (Game Passes, founder items).</dd>
+          <dt>The Altar / Museum / Trophy Hall</dt><dd>The three God Realm (Sky Island) spaces.</dd>
+          <dt>Animalese</dt><dd>The letter-chirp voice style; placeholder for a possible future TTS engine.</dd>
+          <dt>Cards / Pages</dt><dd>The portable character-identity feature (§7).</dd>
+          <dt>Founders Pass / Founder's Spirit</dt><dd>Recognition-based supporter purchases.</dd>
+          <dt>The router from the sky · the missing llamas · unbothered PNG residents</dt><dd>Established lore in-jokes. Use them; never explain them.</dd>
+        </dl>
+      </div>
+
+      <div class="div-doodle">·  ·  ·</div>
+
+      <footer class="foot">
+        <span>Bloxodachi Life — internal vision doc, draft.</span>
+        <span>🌙 Be kind to your Robloxians.</span>
+      </footer>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // Mobile menu — toggle a class on the sidebar so the whole panel shows/hides
+  const btn = document.getElementById('menu-btn');
+  const toc = document.getElementById('toc');
+  const sidebar = document.querySelector('aside.sidebar');
+  if (btn && toc && sidebar) {
+    btn.addEventListener('click', () => {
+      const open = sidebar.classList.toggle('open');
+      toc.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.textContent = open ? 'Close' : 'Menu';
+    });
+    toc.addEventListener('click', (e) => {
+      if (e.target.closest('a') && window.matchMedia('(max-width: 980px)').matches) {
+        sidebar.classList.remove('open');
+        toc.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.textContent = 'Menu';
+      }
+    });
+  }
+
+  // Active-section highlight: deterministic topmost section whose top has passed the trigger line
+  const links = Array.from(document.querySelectorAll('nav.toc a'));
+  const sections = links
+    .map(a => ({ a, el: document.getElementById(a.getAttribute('href').slice(1)) }))
+    .filter(x => x.el);
+  function updateActive(){
+    const triggerY = 120; // px from top of viewport
+    let current = sections[0];
+    for (const s of sections) {
+      const top = s.el.getBoundingClientRect().top;
+      if (top - triggerY <= 0) current = s; else break;
+    }
+    links.forEach(l => l.classList.remove('active'));
+    if (current) current.a.classList.add('active');
+  }
+  let raf = 0;
+  function onScroll(){
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; updateActive(); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  updateActive();
+</script>
+
+</body>
+</html>
