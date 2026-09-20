@@ -1,0 +1,126 @@
+{
+  "source": "https://archive.org/details/msdos_Solitaire_Royale_1987",
+  "data_file": "SoliRoya/SRCEGA.CDS",
+  "data_sha256": "b95c76c504f7415f1bdfccf6273db5e32e3eb21386157a096c89cc907caa4917",
+  "decoded_bytes": 190440,
+  "sprites": 115,
+  "native_size": [
+    72,
+    46
+  ],
+  "display_size": [
+    72,
+    92
+  ],
+  "atlas_columns": 10,
+  "card_backs": 10,
+  "court_sets": 5,
+  "mapping": {
+    "backs": [
+      0,
+      9
+    ],
+    "court_sets_start": 10,
+    "court_set_size": 13,
+    "empty_pile": 75,
+    "hearts_ace_to_ten": [
+      76,
+      85
+    ],
+    "clubs_ace_to_ten": [
+      86,
+      95
+    ],
+    "diamonds_ace_to_ten": [
+      96,
+      105
+    ],
+    "spades_two_to_ten": [
+      106,
+      114
+    ]
+  },
+  "palette": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      170
+    ],
+    [
+      0,
+      170,
+      0
+    ],
+    [
+      0,
+      170,
+      170
+    ],
+    [
+      170,
+      0,
+      0
+    ],
+    [
+      170,
+      0,
+      170
+    ],
+    [
+      170,
+      85,
+      0
+    ],
+    [
+      170,
+      170,
+      170
+    ],
+    [
+      85,
+      85,
+      85
+    ],
+    [
+      85,
+      85,
+      255
+    ],
+    [
+      85,
+      255,
+      85
+    ],
+    [
+      85,
+      255,
+      255
+    ],
+    [
+      255,
+      85,
+      85
+    ],
+    [
+      255,
+      85,
+      255
+    ],
+    [
+      255,
+      255,
+      85
+    ],
+    [
+      255,
+      255,
+      255
+    ]
+  ],
+  "round_trip_verified": true
+}

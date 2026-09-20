@@ -1,22 +1,29 @@
-(function(){'use strict';
-var ranks={A:['01110','11011','11011','11111','11011','11011','11011'],2:['01110','11011','00011','00110','01100','11000','11111'],3:['11110','00011','00011','01110','00011','00011','11110'],4:['00011','00111','01111','11011','11111','00011','00011'],5:['11111','11000','11000','11110','00011','00011','11110'],6:['01110','11000','11000','11110','11011','11011','01110'],7:['11111','00011','00011','00110','01100','01100','01100'],8:['01110','11011','11011','01110','11011','11011','01110'],9:['01110','11011','11011','01111','00011','00011','01110'],10:['10111','10101','10101','10101','10101','10101','10111'],J:['00111','00011','00011','00011','11011','11011','01110'],Q:['01110','11011','11011','11011','11011','01110','00011'],K:['11011','11011','11110','11100','11110','11011','11011']};
-var suits=[['0110110','1111111','1111111','0111110','0011100','0001000'],['0011100','0011100','1111111','1111111','0011100','0001000','0011100'],['0001000','0011100','0111110','1111111','0111110','0011100','0001000'],['0001000','0011100','0111110','1111111','1111111','0101010','0001000','0011100']];
-function bitmap(ctx,rows,x,y,color){ctx.fillStyle=color;rows.forEach(function(row,j){for(var i=0;i<row.length;i++)if(row[i]==='1')ctx.fillRect(x+i,y+j,1,1);});}
-var cache={},artwork={};['queen','jack'].forEach(function(name){var img=new Image();img.onload=function(){cache={};window.dispatchEvent(new Event('royale-cards-ready'));};img.src='./assets/'+name+'.png';artwork[name]=img;});
-function make(c,back){if((!c||!c.up)&&back===0)return './assets/back.png';if(c&&c.up&&c.r===1&&c.s===3)return './assets/ace.png';var key=!c||!c.up?'back'+back:c.s+'-'+c.r;if(cache[key])return cache[key];var cv=document.createElement('canvas');cv.width=36;cv.height=50;var x=cv.getContext('2d');x.imageSmoothingEnabled=false;
- x.fillStyle='#fff';x.fillRect(0,0,36,50);x.clearRect(0,0,1,1);x.clearRect(35,0,1,1);x.clearRect(0,49,1,1);x.clearRect(35,49,1,1);
- if(!c||!c.up){x.fillStyle='#5555ff';x.fillRect(2,2,32,46);x.strokeStyle='#0000aa';x.strokeRect(3.5,3.5,29,43);x.fillStyle='#fff';
- if(back===1){for(var y=6;y<44;y+=6)for(var a=6;a<30;a+=6){x.fillRect(a,y,2,2);x.fillRect(a+2,y+2,2,2);}}
- else if(back===2){for(var y=7;y<43;y+=8)bitmap(x,suits[2],14,y,'#ffff55');}
- else{ x.fillStyle='#000';x.fillRect(8,20,22,18);x.fillStyle='#aaa';x.fillRect(9,23,20,12);x.fillStyle='#fff';x.fillRect(11,9,15,13);x.fillStyle='#aaa';for(var a=12;a<25;a+=3)x.fillRect(a,10,1,10);x.fillStyle='#000';for(var y=25;y<32;y+=3)for(var a=11;a<28;a+=3)x.fillRect(a,y,2,1);x.fillRect(13,36,4,8);x.fillRect(24,36,4,8);x.fillStyle='#55ffff';x.fillRect(18,34,4,8); }
- }else{var color=Royale.red(c)?'#ff5555':'#000',rank=c.r===1?'A':c.r===11?'J':c.r===12?'Q':c.r===13?'K':String(c.r);bitmap(x,ranks[rank],2,2,color);bitmap(x,suits[c.s],1,10,color);x.save();x.translate(36,50);x.rotate(Math.PI);bitmap(x,ranks[rank],2,2,color);bitmap(x,suits[c.s],1,10,color);x.restore();
- if(c.r>10){
-   // Symmetric EGA court: crown, profile, robes, and checkerboard ornament.
-   x.fillStyle='#0000aa';x.fillRect(9,6,18,38);x.fillStyle='#ffff55';x.fillRect(10,7,16,36);
-   function court(){bitmap(x,['1010101','1111111','0111110','0011110','0010100','0001100','0011110'],13,8,'#aa0000');x.fillStyle='#fff';x.fillRect(16,12,6,6);x.fillStyle='#000';x.fillRect(20,13,1,1);x.fillRect(20,17,3,1);x.fillStyle='#ff5555';x.fillRect(11,20,14,6);for(var y=20;y<27;y+=2)for(var a=11;a<26;a+=3){x.fillStyle=(a+y)%2?'#0000aa':'#fff';x.fillRect(a,y,2,1);}x.fillStyle='#0000aa';x.fillRect(11,9,2,12);x.fillStyle='#fff';x.fillRect(12,18,4,2);}
-   court();x.save();x.translate(36,50);x.rotate(Math.PI);court();x.restore();
-   var art=artwork[c.r===11?'jack':'queen'];if(art.complete&&art.naturalWidth)x.drawImage(art,5,0,art.naturalWidth-10,art.naturalHeight,8,2,20,46);
- }else{var positions={1:[[18,25]],2:[[18,12],[18,38]],3:[[18,12],[18,25],[18,38]],4:[[12,12],[24,12],[12,38],[24,38]],5:[[12,12],[24,12],[18,25],[12,38],[24,38]],6:[[12,12],[24,12],[12,25],[24,25],[12,38],[24,38]],7:[[12,12],[24,12],[18,18],[12,25],[24,25],[12,38],[24,38]],8:[[12,12],[24,12],[18,18],[12,25],[24,25],[18,32],[12,38],[24,38]],9:[[12,10],[24,10],[12,20],[24,20],[18,25],[12,30],[24,30],[12,40],[24,40]],10:[[12,9],[24,9],[18,15],[12,20],[24,20],[12,30],[24,30],[18,35],[12,41],[24,41]]};positions[c.r].forEach(function(p){x.save();if(p[1]>25){x.translate(p[0]+3,p[1]+3);x.rotate(Math.PI);bitmap(x,suits[c.s],0,0,color);}else bitmap(x,suits[c.s],p[0]-3,p[1]-3,color);x.restore();});}}
- return cache[key]=cv.toDataURL();}
-window.RoyaleCards={make:make};
-}());
+/* Original EGA sprites decoded from SRCEGA.CDS; see assets/original-art.json. */
+(function(root,factory){
+ if(typeof module==='object'&&module.exports)module.exports=factory(null);
+ else root.RoyaleCards=factory(root);
+}(this,function(root){
+ 'use strict';
+ var backs=['motor car','bridge','river','pelican','forest','flowers','unicorn','lattice','bouquet','palms'];
+ var faces=['classic','portraits','modern','costumes','crowns'];
+ function choice(value,length){return Number.isInteger(value)&&value>=0&&value<length?value:0;}
+ function indexFor(card,back,face){
+  if(!card||!card.up)return choice(back,10);
+  face=choice(face,5);
+  if(card.r>=11)return 10+face*13+card.s*3+card.r-11;
+  if(card.s===3)return card.r===1?22+face*13:104+card.r;
+  return 75+card.s*10+card.r;
+ }
+ var cache={},atlas,ready=false;
+ var loading='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="72" height="92"%3E%3Crect width="72" height="92" fill="black"/%3E%3Crect x="1" y="1" width="70" height="90" fill="white"/%3E%3C/svg%3E';
+ function sprite(index){
+  if(!ready)return loading;
+  if(cache[index])return cache[index];
+  var canvas=root.document.createElement('canvas');canvas.width=72;canvas.height=92;
+  var ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
+  ctx.drawImage(atlas,(index%10)*72,Math.floor(index/10)*46,72,46,0,0,72,92);
+  return cache[index]=canvas.toDataURL('image/png');
+ }
+ if(root){atlas=new root.Image();atlas.onload=function(){ready=true;root.dispatchEvent(new Event('royale-cards-ready'));};atlas.src='./assets/original-ega.png';}
+ return {backs:backs,faces:faces,indexFor:indexFor,make:function(card,back,face){return sprite(indexFor(card,back,face));},empty:function(){return sprite(75);}};
+}));
