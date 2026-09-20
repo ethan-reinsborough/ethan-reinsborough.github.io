@@ -7,8 +7,37 @@ function say(t,announceOnly){$('status').textContent=announceOnly?'':t;$('announ
 function read(){try{return JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){return null;}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify({state:state,initial:initial,history:history,prefs:prefs,tour:tour,tournament:tournament,scores:scores}));}catch(e){storageOK=false;if(!savedNotice){savedNotice=true;say('Saving is unavailable. Use disk > save to a file.');}}}
 var data=read();if(data&&R.valid(data.state)){state=data.state;initial=R.valid(data.initial)?data.initial:R.clone(state);history=(data.history||[]).filter(R.valid).slice(-40);Object.keys(prefs).forEach(function(k){if(data.prefs&&typeof data.prefs[k]===typeof prefs[k])prefs[k]=data.prefs[k];});tour=data.tour&&Array.isArray(data.tour.scores)&&data.tour.index>=0&&data.tour.index<8?data.tour:null;tournament=data.tournament&&Number.isFinite(data.tournament.seed)?data.tournament:null;scores=Array.isArray(data.scores)?data.scores.slice(0,5):[];if(state.flipped.length===2)R.conceal(state);}else{state=R.create('klondike');initial=R.clone(state);}
-function fit(){var rect=$('viewport').getBoundingClientRect();scale=Math.min(rect.width/640,rect.height/400);$('screen').style.transform='scale('+scale+')';}
-window.addEventListener('resize',fit);if(window.visualViewport)window.visualViewport.addEventListener('resize',fit);fit();
+// Safari's visible area changes independently of the layout viewport during rotation.
+var fitFrame=0,rotationTimers=[];
+function fit(){
+ fitFrame=0;
+ var viewport=$('viewport'),visual=window.visualViewport;
+ // Keep intentional pinch zoom usable; only fit the visible area at normal zoom.
+ var visible=visual&&Math.abs(visual.scale-1)<.05;
+ viewport.style.width=(visible?visual.width:window.innerWidth)+'px';
+ viewport.style.height=(visible?visual.height:window.innerHeight)+'px';
+ viewport.style.left=(visible?visual.offsetLeft:0)+'px';
+ viewport.style.top=(visible?visual.offsetTop:0)+'px';
+ var rect=viewport.getBoundingClientRect(),padding=getComputedStyle(viewport);
+ var width=rect.width-(parseFloat(padding.paddingLeft)||0)-(parseFloat(padding.paddingRight)||0);
+ var height=rect.height-(parseFloat(padding.paddingTop)||0)-(parseFloat(padding.paddingBottom)||0);
+ if(width<=0||height<=0)return;
+ scale=Math.min(width/640,height/400);
+ $('screen').style.transform='scale('+scale+')';
+}
+function scheduleFit(){if(!fitFrame)fitFrame=requestAnimationFrame(fit);}
+function settleFit(){
+ scheduleFit();rotationTimers.forEach(clearTimeout);
+ rotationTimers=[100,300,700,1200].map(function(delay){return setTimeout(scheduleFit,delay);});
+}
+window.addEventListener('resize',scheduleFit);
+window.addEventListener('orientationchange',settleFit);
+window.addEventListener('pageshow',settleFit);
+if(window.screen.orientation&&window.screen.orientation.addEventListener)window.screen.orientation.addEventListener('change',settleFit);
+if(window.visualViewport){window.visualViewport.addEventListener('resize',scheduleFit);window.visualViewport.addEventListener('scroll',scheduleFit);}
+document.addEventListener('visibilitychange',function(){if(!document.hidden)settleFit();});
+if(window.ResizeObserver)new ResizeObserver(scheduleFit).observe($('viewport'));
+fit();
 function audio(ok){if(!prefs.sound)return;try{var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;audio.ctx=audio.ctx||new AC();var ctx=audio.ctx;ctx.resume();var osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='square';osc.frequency.value=ok?660:165;gain.gain.setValueAtTime(.018,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.05);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.06);}catch(e){}}
 function btn(text,action,cls){var b=document.createElement('button');b.type='button';b.textContent=text;if(cls)b.className=cls;b.addEventListener('click',action);return b;}
 function point(p){return p.type+':'+(p.pile||0)+':'+(p.index===undefined?'':p.index);}
@@ -77,7 +106,7 @@ function win(){dialog('you win!',title(state.game)+' complete!\n\n'+scoreText()+
 function installation(){dialog('add to your iPad Home Screen','Open this page in Safari.\n\n1. Tap Share (the square with an upward arrow).\n2. Choose Add to Home Screen.\n3. Keep Open as Web App enabled, if shown.\n4. Tap Add.\n\nLaunch the new Solitaire icon for a screen with just the game. Turn the iPad sideways for the largest cards.\n\n'+(navigator.serviceWorker&&navigator.serviceWorker.controller?'The game is ready for offline play.':'Stay online for the first visit so the game can be saved for offline play.'));}
 function download(){save();var blob=new Blob([JSON.stringify({format:'solitaire-royale',state:state,initial:initial,history:history,tour:tour,tournament:tournament})],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='solitaire-royale-save.json';a.click();setTimeout(function(){URL.revokeObjectURL(url);},5000);closeMenu();say('Saved game file created.');}
 $('open-file').addEventListener('change',function(e){var f=e.target.files[0];if(!f)return;if(f.size>1000000){dialog('open game','That file is too large.');return;}var reader=new FileReader();reader.onload=function(){try{var v=JSON.parse(reader.result);if(v.format!=='solitaire-royale'||!R.valid(v.state))throw Error();confirm('Replace the current game with this saved game?',function(){clearTimeout(memoryTimer);state=v.state;initial=R.valid(v.initial)?v.initial:R.clone(state);history=Array.isArray(v.history)?v.history.filter(R.valid).slice(-40):[];tour=v.tour&&Array.isArray(v.tour.scores)&&v.tour.index>=0&&v.tour.index<8?v.tour:null;tournament=v.tournament&&Array.isArray(v.tournament.results)&&Number.isFinite(v.tournament.seed)?v.tournament:null;if(state.flipped.length===2)R.conceal(state);save();render();});}catch(err){dialog('open game','That file is not a valid Solitaire Royale save. Your current game is unchanged.');}};reader.readAsText(f);e.target.value='';});
-function popup(name,items,x){closeMenu();menu=name;var m=document.createElement('div');m.className='menu'+(prefs.large?' large':'');m.style.left=x+'px';m.setAttribute('role','menu');items.forEach(function(item){if(!item){m.appendChild(document.createElement('hr'));return;}var b=btn(item.label,item.run,item.checked?'checked':'');b.setAttribute('role','menuitem');if(item.disabled)b.disabled=true;m.appendChild(b);});$('menu-layer').appendChild(m);var nav=$('menubar').querySelector('[data-menu="'+name+'"]');if(nav){nav.classList.add('active');nav.setAttribute('aria-expanded','true');}}
+function popup(name,items,x){closeMenu();menu=name;var m=document.createElement('div');m.className='menu'+(prefs.large?' large':'');m.style.left=x+'px';m.setAttribute('role','menu');items.forEach(function(item){if(!item){m.appendChild(document.createElement('hr'));return;}var b=btn(item.label,item.run,item.checked?'checked':'');b.setAttribute('role','menuitem');if(item.disabled)b.disabled=true;m.appendChild(b);});$('menu-layer').appendChild(m);m.style.left=Math.max(0,Math.min(x,640-m.offsetWidth))+'px';var nav=$('menubar').querySelector('[data-menu="'+name+'"]');if(nav){nav.classList.add('active');nav.setAttribute('aria-expanded','true');}}
 function gamesMenu(name,fn){var items=R.games.slice(0,8).map(function(g){return{label:title(g),run:function(){fn(g);}};});items.push(null,{label:"tour (aunt anne's game)",run:function(){if(name==='how')dialog('tour','Play all eight games in order. Each card scored contributes to a total out of 416. Use help > next tour game when ready.');else confirm('Begin a new eight-game tour?',function(){beginTour();});}},{label:'tournament play',run:function(){if(name==='how')dialog('tournament play','Players take turns with identical shuffled deals. Record a score under help, then select the next player.');else tournamentSetup();}},{label:"children's games >",run:function(){popup(name,R.games.slice(8).map(function(g){return{label:title(g),run:function(){fn(g);}};}),name==='how'?208:0);}});return items;}
 function chooseDeck(kind){
  var wrap=document.createElement('div'),tabs=document.createElement('div');tabs.className='deck-tabs';
