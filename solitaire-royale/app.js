@@ -8,7 +8,7 @@ function read(){try{return JSON.parse(localStorage.getItem(KEY)||'null');}catch(
 function save(){try{localStorage.setItem(KEY,JSON.stringify({state:state,initial:initial,history:history,prefs:prefs,tour:tour,tournament:tournament,scores:scores}));}catch(e){storageOK=false;if(!savedNotice){savedNotice=true;say('Saving is unavailable. Use disk > save to a file.');}}}
 var data=read();if(data&&R.valid(data.state)){state=data.state;initial=R.valid(data.initial)?data.initial:R.clone(state);history=(data.history||[]).filter(R.valid).slice(-40);Object.keys(prefs).forEach(function(k){if(data.prefs&&typeof data.prefs[k]===typeof prefs[k])prefs[k]=data.prefs[k];});tour=data.tour&&Array.isArray(data.tour.scores)&&data.tour.index>=0&&data.tour.index<8?data.tour:null;tournament=data.tournament&&Number.isFinite(data.tournament.seed)?data.tournament:null;scores=Array.isArray(data.scores)?data.scores.slice(0,5):[];if(state.flipped.length===2)R.conceal(state);}else{state=R.create('klondike');initial=R.clone(state);}
 // Safari's visible area changes independently of the layout viewport during rotation.
-var fitFrame=0,rotationTimers=[];
+var fitFrame=0,rotationTimers=[],touchUI=navigator.maxTouchPoints>0||window.matchMedia('(any-pointer: coarse)').matches;
 function fit(){
  fitFrame=0;
  var viewport=$('viewport'),visual=window.visualViewport;
@@ -22,8 +22,17 @@ function fit(){
  var width=rect.width-(parseFloat(padding.paddingLeft)||0)-(parseFloat(padding.paddingRight)||0);
  var height=rect.height-(parseFloat(padding.paddingTop)||0)-(parseFloat(padding.paddingBottom)||0);
  if(width<=0||height<=0)return;
- scale=Math.min(width/640,height/400);
- $('screen').style.transform='scale('+scale+')';
+ touchUI=navigator.maxTouchPoints>0||window.matchMedia('(any-pointer: coarse)').matches||(width<=1000&&height<=500);
+ var screen=$('screen'),edge=touchUI?6:0;
+ // Reserve 44 physical pixels for touch controls, independent of board scaling.
+ scale=touchUI?Math.min(width/640,Math.max(1,height-edge*2-44)/382):Math.min(width/640,height/400);
+ var bar=touchUI?44/scale:18;
+ screen.classList.toggle('touch-ui',touchUI);
+ screen.style.height=(382+bar)+'px';
+ screen.style.setProperty('--menu-height',bar+'px');
+ screen.style.setProperty('--menu-font',Math.max(16,touchUI?Math.min(24,14/scale):16)+'px');
+ screen.style.setProperty('--menu-row',Math.max(24,touchUI?36/scale:24)+'px');
+ screen.style.transform='scale('+scale+')';
 }
 function scheduleFit(){if(!fitFrame)fitFrame=requestAnimationFrame(fit);}
 function settleFit(){
@@ -134,5 +143,5 @@ document.addEventListener('keydown',function(e){
 });
 window.addEventListener('royale-cards-ready',render);render();save();
 window.addEventListener('pagehide',save);document.addEventListener('visibilitychange',function(){if(document.hidden)save();});
-if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(function(reg){reg.update();}).catch(function(){say('Online play is ready. Offline setup will retry next visit.');});});}
+if('serviceWorker' in navigator){var hadController=!!navigator.serviceWorker.controller,reloading=false;navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadController&&!reloading){reloading=true;save();location.reload();}hadController=true;});window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'}).then(function(reg){reg.update();document.addEventListener('visibilitychange',function(){if(!document.hidden)reg.update();});}).catch(function(){say('Online play is ready. Offline setup will retry next visit.');});});}
 }());
