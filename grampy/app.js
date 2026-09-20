@@ -72,6 +72,25 @@
   $('modal-layer').addEventListener('change',function(e){if(e.target.id==='card-theme')prefs.theme=e.target.value;if(e.target.id==='sound-check'){prefs.sound=e.target.checked;sound('foundation');}if(e.target.id==='motion-check')prefs.motion=e.target.checked;applyPrefs();});
   $('mail-list').addEventListener('click',function(e){var b=e.target.closest('[data-post]');if(b){showPost(+b.getAttribute('data-post'));$('letter').focus();}});
   document.addEventListener('keydown',function(e){if(!$('modal-layer').hidden){if(e.key==='Escape')closeModal();if(e.key==='Tab'){var els=$('modal-layer').querySelectorAll('button,input,select,a[href]'),first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}return;}if($('game-view').hidden)return;if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();undo();}if(e.key==='Escape'){selected=null;render();}if(e.key.toLowerCase()==='h'&&!e.ctrlKey&&!e.metaKey)hint();});
+  // A little birthday Easter egg. Complete the actual deck so saving and Undo still work.
+  function secretWin(){
+    if(busy||state.won)return;
+    remember();
+    var cards=state.stock.concat(state.waste);
+    state.tableau.concat(state.foundations).forEach(function(p){cards=cards.concat(p);});
+    state.stock=[];state.waste=[];state.tableau=[[],[],[],[],[],[],[]];
+    state.foundations=E.suits.map(function(suit){return cards.filter(function(c){return c.suit===suit;}).sort(function(a,b){return a.rank-b.rank;}).map(function(c){c.up=true;return c;});});
+    state.moves++;state.won=true;selected=null;render();save();say('All 52 cards brought home. Happy birthday, Grampy!');win();
+  }
+  var secretKeys='';
+  document.addEventListener('keydown',function(e){
+    var target=e.target,key=(e.key||'').toLowerCase();
+    if(e.ctrlKey||e.metaKey||e.altKey||e.isComposing||!$('modal-layer').hidden||$('game-view').hidden||busy||state.won||(target&&(target.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)))){secretKeys='';return;}
+    if(e.repeat||key==='shift')return;
+    if(!/^[a-z]$/.test(key)){secretKeys='';return;}
+    secretKeys=(secretKeys+key).slice(-5);
+    if(secretKeys==='lilly'){secretKeys='';e.preventDefault();secretWin();}
+  });
   var resizeTimer;window.addEventListener('resize',function(){clearTimeout(resizeTimer);resizeTimer=setTimeout(function(){if(!$('game-view').hidden)render();},120);});
   var saved=storage('grampy-solitaire-v1'),storedPrefs=storage('grampy-prefs-v1');
   if(storedPrefs){prefs.sound=storedPrefs.sound===true;prefs.motion=storedPrefs.motion!==false;prefs.theme=['farm','falls','harvest'].indexOf(storedPrefs.theme)>=0?storedPrefs.theme:'farm';}applyPrefs();
