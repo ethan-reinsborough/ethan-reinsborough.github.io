@@ -3,7 +3,7 @@ var R=Royale,$=function(id){return document.getElementById(id);},KEY='solitaire-
 var prefs={sound:true,fast:false,drag:true,left:false,large:false,back:0,face:0},tour=null,tournament=null,scores=[],savedNotice=false,storageOK=true;
 var suitNames=['hearts','clubs','diamonds','spades'],rankNames=['','ace','2','3','4','5','6','7','8','9','10','jack','queen','king'];
 function title(g){return R.titles[R.games.indexOf(g)];}
-function say(t){$('status').textContent=t;$('announcer').textContent=t;}
+function say(t,announceOnly){$('status').textContent=announceOnly?'':t;$('announcer').textContent=t;}
 function read(){try{return JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){return null;}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify({state:state,initial:initial,history:history,prefs:prefs,tour:tour,tournament:tournament,scores:scores}));}catch(e){storageOK=false;if(!savedNotice){savedNotice=true;say('Saving is unavailable. Use disk > save to a file.');}}}
 var data=read();if(data&&R.valid(data.state)){state=data.state;initial=R.valid(data.initial)?data.initial:R.clone(state);history=(data.history||[]).filter(R.valid).slice(-40);Object.keys(prefs).forEach(function(k){if(data.prefs&&typeof data.prefs[k]===typeof prefs[k])prefs[k]=data.prefs[k];});tour=data.tour&&Array.isArray(data.tour.scores)&&data.tour.index>=0&&data.tour.index<8?data.tour:null;tournament=data.tournament&&Number.isFinite(data.tournament.seed)?data.tournament:null;scores=Array.isArray(data.scores)?data.scores.slice(0,5):[];if(state.flipped.length===2)R.conceal(state);}else{state=R.create('klondike');initial=R.clone(state);}
@@ -18,7 +18,7 @@ function dialog(heading,content,actions){if(menu==='how'){var menuBox=$('menu-la
 function confirm(text,run){dialog('start a new game',text,[{label:'ok',run:function(){closeDialog();run();}},{label:'cancel',run:closeDialog}]);}
 function snapshot(){history.push(R.clone(state));if(history.length>40)history.shift();}
 function change(fn,message){snapshot();if(!fn()){history.pop();audio(false);say(message||'That move is not available. Try another card.');return false;}selected=null;drawMode=false;audio(true);save();render();if(state.won)win();return true;}
-function start(g,seed,keep){clearTimeout(memoryTimer);if(!keep){tour=null;tournament=null;}state=R.create(g,seed);initial=R.clone(state);history=[];selected=null;drawMode=false;deal=!prefs.fast;save();render();deal=false;closeMenu();say('Select a card, then its destination. How to play explains '+title(g)+'.');}
+function start(g,seed,keep){clearTimeout(memoryTimer);if(!keep){tour=null;tournament=null;}state=R.create(g,seed);initial=R.clone(state);history=[];selected=null;drawMode=false;deal=!prefs.fast;save();render();deal=false;closeMenu();say('Select a card, then its destination. How to play explains '+title(g)+'.',true);}
 function newGame(g){confirm('Deal a new game of '+title(g)+'? Your current game will be replaced.',function(){if(g==='concentration'){var c=document.createElement('div');c.append(btn('one player',function(){closeDialog();start(g);},'choice'),btn('two players',function(){closeDialog();start(g);state.players=2;initial=R.clone(state);save();render();},'choice'));dialog('concentration',c);}else start(g);});}
 function undo(){clearTimeout(memoryTimer);closeMenu();if(!history.length){say('There are no moves to undo.');return;}state=history.pop();selected=null;drawMode=false;if(state.flipped.length===2)R.conceal(state);save();render();say('Move undone.');}
 function scoreText(){return state.game==='reno'&&!tour?'winnings: $'+R.score(state)*5+'   balance: $'+(R.score(state)*5-52):state.game==='concentration'&&state.players===2?'player '+(state.player+1)+'   scores: '+state.points.join(' / '):'score: '+R.score(state)+'   moves: '+state.moves;}
@@ -55,11 +55,11 @@ function activate(p){
  if(selected&&selected.type==='stock'&&p.type==='waste'){change(function(){return R.draw(state);});return;}
  if(g==='pyramid'&&c&&c.r===13&&R.exposed(state,p)){change(function(){return R.pair(state,p);});return;}
  if(p.type==='stock'){
-   if(c&&c.up&&!selected){selected=p;render();say('Select a matching card or destination. Tap stock again to turn it.');return;}
+   if(c&&c.up&&!selected){selected=p;render();say('Select a matching card or destination. Tap stock again to turn it.',true);return;}
    change(function(){return R.draw(state);},'No more stock cards are available.');return;
  }
  if(p.type==='reserve'&&g==='pairs'&&!c){return;}
- if(c&&c.up&&(drawMode||R.exposed(state,p)||p.type==='tableau'&&['klondike','canfield','reno'].includes(g))){selected=p;render();say(cardLabel(c,p)+' selected. Choose a destination.');}else{audio(false);say('Choose an exposed card or turn the stock.');}
+ if(c&&c.up&&(drawMode||R.exposed(state,p)||p.type==='tableau'&&['klondike','canfield','reno'].includes(g))){selected=p;render();say(cardLabel(c,p)+' selected. Choose a destination.',true);}else{audio(false);say('Choose an exposed card or turn the stock.');}
 }
 // Pointer dragging supplements the original select-then-place interaction.
 function bindDrag(el,p){el.addEventListener('pointerdown',function(e){if(e.button!==0)return;drag={p:p,x:e.clientX,y:e.clientY,el:el,moved:false};el.setPointerCapture(e.pointerId);});el.addEventListener('pointermove',function(e){if(!drag||drag.el!==el)return;var dx=(e.clientX-drag.x)/scale,dy=(e.clientY-drag.y)/scale;if(Math.abs(dx)+Math.abs(dy)>6){drag.moved=true;el.classList.add('dragging');el.style.transform='translate('+dx+'px,'+dy+'px)';}});el.addEventListener('pointerup',function(e){if(!drag)return;var d=drag;if(!d.moved){drag=null;return;}var rect=$('table').getBoundingClientRect(),x=(e.clientX-rect.left)/scale,y=(e.clientY-rect.top)/scale,dest=null;positions.forEach(function(pos){if(x>=pos.x&&x<=pos.x+pos.w&&y>=pos.y&&y<=pos.y+pos.h)dest=pos.p;});setTimeout(function(){drag=null;},0);if(dest&&R.canMove(state,d.p,{type:dest.type,pile:dest.pile})){change(function(){return R.move(state,d.p,{type:dest.type,pile:dest.pile});});}else{render();say('Choose a legal destination for that card.');}});el.addEventListener('pointercancel',function(){drag=null;render();});}
